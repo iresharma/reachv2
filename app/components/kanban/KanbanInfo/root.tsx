@@ -17,6 +17,7 @@ export type Item = {
   Id: string,
   Desc: string,
   Label: {
+    Id: string;
     Color: string,
     Name: string
   },
@@ -89,12 +90,17 @@ export default function KanbanSheet({ item }: { item: Item }) {
                   </Badge>
                 </TableCell>
               </TableRow>
-              {Object.keys(JSON.parse(item.Links)).map((val, index) => (
-                <TableRow className="border-0" key={index}>
-                  <TableCell className="p-2 font-bold ">{val}</TableCell>
-                  <TableCell className="p-2 w-8/12">{JSON.parse(item.Links)[val]}</TableCell>
-                </TableRow>
-              ))}
+              {item.Links === "" && <TableRow className="border-0">
+                <TableCell colSpan={2}>
+                  No values enter below to add
+                </TableCell>
+              </TableRow>}
+              {item.Links !== "" && Object.keys(JSON.parse(item.Links)).map((val, index) => (
+                    <TableRow className="border-0" key={index}>
+                      <TableCell className="p-2 font-bold ">{val}</TableCell>
+                      <TableCell className="p-2 w-8/12">{JSON.parse(item.Links)[val]}</TableCell>
+                    </TableRow>
+                ))}
               <TableRow className="border-0">
                 <TableCell className="p-2 font-bold ">dummy</TableCell>
                 <TableCell className="p-2 w-8/12">dummy</TableCell>

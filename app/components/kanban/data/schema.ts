@@ -15,4 +15,4 @@ export const taskSchema = z.object({
   Links: z.string(),
 });
 
-export type Task = z.infer<typeof taskSchema>;
+export type Item = z.infer<typeof taskSchema>;

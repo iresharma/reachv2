@@ -1,10 +1,8 @@
 import { AuthTabs } from "~/components/auth/tabs";
 import Background from "~/assets/auth-page.svg";
-import type {ActionArgs, V2_MetaFunction} from "@remix-run/node";
-import {signIn} from "~/services/api/auth/signin";
-import {redirect, useActionData} from "react-router";
+import type {V2_MetaFunction} from "@remix-run/node";
+import {useActionData} from "react-router";
 import {useToast} from "~/components/ui/use-toast";
-import {commitSession} from "~/session";
 import type { LinksFunction } from "@remix-run/node";
 import inputStyles from "~/styles/auth/input.css"
 

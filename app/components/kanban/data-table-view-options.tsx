@@ -4,6 +4,7 @@ import {Button} from "~/components/ui/button";
 import {Sheet, SheetContent} from "~/components/ui/sheet";
 import KanbanSheet from "~/components/kanban/KanbanInfo/root";
 import * as React from "react";
+import {BadgePlus} from "lucide-react";
 
 const emptyData = {
     Title: "",
@@ -24,6 +25,10 @@ export function DataTableViewOptions() {
     }
     return (
         <>
+            <Button variant="ghost" size="sm" className="ml-auto hidden h-8 lg:flex" onClick={() => openSheet(true)}>
+                <BadgePlus className="mr-2 h-4 w-4"/>
+                Add New Label
+            </Button>
             <Button variant="outline" size="sm" className="ml-auto hidden h-8 lg:flex" onClick={() => openSheet(true)}>
                 <PlusCircledIcon className="mr-2 h-4 w-4"/>
                 Add New

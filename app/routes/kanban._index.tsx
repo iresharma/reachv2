@@ -10,7 +10,7 @@ import {LinksFunction, LoaderArgs, V2_MetaFunction} from "@remix-run/node";
 import {z} from "zod";
 import unresetStyles from "~/styles/misc-components/unreset.css";
 import downloadReport from "~/services/api/kanban/getDownloadReport"
-import {Item} from "~/components/kanban/KanbanInfo/root";
+import type {Item} from "~/components/kanban/KanbanInfo/root";
 
 
 export const meta: V2_MetaFunction = () => {
@@ -35,6 +35,7 @@ export const loader = async ({request}: LoaderArgs) => {
         return redirect("/kanban/new")
     }
     const tasks = await getKanbanItems({page: 0, limit: 30, session});
+    console.log(tasks)
 
     return z.array(taskSchema).parse(tasks);
 }

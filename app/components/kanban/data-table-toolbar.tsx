@@ -42,6 +42,13 @@ export function DataTableToolbar<TData>({
             options={priorities}
           />
         )}
+          {table.getColumn("label") && (
+              <DataTableFacetedFilter
+                  column={table.getColumn("label")}
+                  title="Label"
+                  options={priorities}
+              />
+          )}
         {isFiltered && (
           <Button
             variant="ghost"
