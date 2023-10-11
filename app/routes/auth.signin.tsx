@@ -10,10 +10,8 @@ export const action = async ({ request }: ActionArgs) => {
     console.log(email, password)
     const resp = await signIn({email: email.toString(), password: password.toString()});
     if (typeof resp.error !== "undefined") {
-        return {
-            title: "Something Went Wrong!",
-            description: resp.error
-        }
+        console.log(resp)
+        return redirect("/auth")
     } else {
         return redirect("/", {
             headers: {

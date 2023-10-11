@@ -11,17 +11,24 @@ import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import { Copy, Trash2Icon } from "lucide-react";
 
-export default function KanbanSheet({ item }: { item: any }) {
+export type Item = {
+  Title: string,
+  Status: number,
+  Id: string,
+  Desc: string,
+  Label: {
+    Color: string,
+    Name: string
+  },
+  Links: string
+}
+
+export default function KanbanSheet({ item }: { item: Item }) {
   const [title, setTitle] = useState(item.Title);
   const status_mapping = ["Todo", "Progress", "Done", "Canceled", "backlog"];
   const textAreaHeight = (e: any) => {
     e.target.style.height = "inherit";
     e.target.style.height = `${Math.min(e.target.scrollHeight, 200)}px`;
-  };
-  const links = {
-    data: "key",
-    hello: "hi",
-    yolo: "bolo",
   };
   const getStatus = (status: number): string => {
     let colorClass = "";
@@ -53,6 +60,7 @@ export default function KanbanSheet({ item }: { item: any }) {
           onKeyDown={textAreaHeight}
           className="resize-none border-none h-[1rem] text-2xl font-bold p-0 m-0 focus-visible:ring-0"
           value={title}
+          placeholder="Create a title"
           onChange={({ target }) => setTitle(target.value)}
         />
         <p className="text-xs text-muted-foreground">
@@ -81,12 +89,16 @@ export default function KanbanSheet({ item }: { item: any }) {
                   </Badge>
                 </TableCell>
               </TableRow>
-              {Object.keys(links).map((val, index) => (
+              {Object.keys(JSON.parse(item.Links)).map((val, index) => (
                 <TableRow className="border-0" key={index}>
                   <TableCell className="p-2 font-bold ">{val}</TableCell>
-                  <TableCell className="p-2 w-8/12">{links[val]}</TableCell>
+                  <TableCell className="p-2 w-8/12">{JSON.parse(item.Links)[val]}</TableCell>
                 </TableRow>
               ))}
+              <TableRow className="border-0">
+                <TableCell className="p-2 font-bold ">dummy</TableCell>
+                <TableCell className="p-2 w-8/12">dummy</TableCell>
+              </TableRow>
             </TableBody>
           </Table>
           <Button

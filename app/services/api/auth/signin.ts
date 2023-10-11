@@ -55,9 +55,12 @@ export const signIn = async ({
     session.set("X-Session", data["session"]);
     session.set("X-Auth", data["auth"]);
     session.set("X-Perm", data["perm"]);
-    const {id, name} = await getUserAccount({auth: data["auth"], session: data["session"]});
-    session.set("X-UserAccount", id);
-    session.set("X-UserAccount-Name", name);
+    const {Id, Name, BoardId, BucketId, PageId} = await getUserAccount({auth: data["auth"], session: data["session"]});
+    session.set("X-UserAccount", Id);
+    session.set("X-UserAccount-Name", Name);
+    session.set("X-Board", BoardId);
+    session.set("X-Bucket", BucketId);
+    session.set("X-Page", PageId);
     return {
         session: session
     }

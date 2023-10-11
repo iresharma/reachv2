@@ -5,11 +5,7 @@ export type GetUserAccountInput = {
     session: string;
 };
 
-export type GetUserAccountResponse = {
-    id: string; name: string;
-};
-
-export const getUserAccount = async ({auth, session}: GetUserAccountInput): Promise<GetUserAccountResponse> => {
+export const getUserAccount = async ({auth, session}: GetUserAccountInput): Promise<any> => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     myHeaders.append("X-Auth", auth);
@@ -25,5 +21,5 @@ export const getUserAccount = async ({auth, session}: GetUserAccountInput): Prom
     );
     const data = await resp.json();
     console.log(data)
-    return {id: data.userAccount.Id, name: data.userAccount.AccountName};
+    return data.userAccount
 };

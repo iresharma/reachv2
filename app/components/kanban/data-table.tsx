@@ -131,6 +131,7 @@ export function DataTable<TData, TValue>({
       <Sheet open={sheet}>
         <SheetContent
           className="p-0"
+          style={{ width: "65vw" }}
           onPointerDownOutside={() => openSheet(false)}
         >
           <KanbanSheet item={item} />

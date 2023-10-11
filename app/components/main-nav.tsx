@@ -1,18 +1,8 @@
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "~/components/ui/sheet";
-
 import { cn } from "~/lib/utils";
 import {
   CalendarDays,
   ChromeIcon,
   CloudCog,
-  FilesIcon,
   ListChecksIcon,
   Mail,
   ShoppingBag,
@@ -27,34 +17,21 @@ export function MainNav({
       className={cn("flex items-center space-x-4 lg:space-x-6", className)}
       {...props}
     >
-      <Sheet>
-        <SheetTrigger className="text-sm font-medium transition-colors hover:text-primary">
-          <div className="relative z-20 flex items-center text-lg font-medium dark:text-white text-black">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="mr-2 h-6 w-6"
-            >
-              <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
-            </svg>
-            Reach
-          </div>
-        </SheetTrigger>
-        <SheetContent side="left">
-          <SheetHeader>
-            <SheetTitle>Are you sure absolutely sure?</SheetTitle>
-            <SheetDescription>
-              This action cannot be undone. This will permanently delete your
-              account and remove your data from our servers.
-            </SheetDescription>
-          </SheetHeader>
-        </SheetContent>
-      </Sheet>
+      <a href="/" className="relative z-20 flex items-center text-lg font-medium dark:text-white text-black">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="mr-2 h-6 w-6"
+        >
+          <path d="M15 6v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3V6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3" />
+        </svg>
+        Reach
+      </a>
       <a
         href="/kanban"
         className="text-sm flex items-center font-medium text-muted-foreground transition-colors hover:text-primary"

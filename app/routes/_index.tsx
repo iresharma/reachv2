@@ -3,6 +3,7 @@ import { Instagram, Twitch, YoutubeIcon } from "lucide-react";
 import {json, LoaderArgs, V2_MetaFunction} from "@remix-run/node";
 import {getSession} from "~/session";
 import {useLoaderData} from "react-router";
+import {useEffect} from "react";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -20,6 +21,11 @@ export const loader = async ({request}: LoaderArgs) => {
 
 export default function DashboardPage() {
   const {session} = useLoaderData();
+  useEffect(() => {
+    Object.keys(session.data).map((val) => {
+      localStorage.setItem(val, session.data[val]);
+    })
+  })
   return (
       <>
         <div className="flex-col flex">
