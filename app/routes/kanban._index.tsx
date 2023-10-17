@@ -11,6 +11,7 @@ import {z} from "zod";
 import unresetStyles from "~/styles/misc-components/unreset.css";
 import downloadReport from "~/services/api/kanban/getDownloadReport"
 import type {Item} from "~/components/kanban/KanbanInfo/root";
+import getKanban from "~/services/api/kanban/getKanban";
 
 
 export const meta: V2_MetaFunction = () => {
@@ -34,14 +35,20 @@ export const loader = async ({request}: LoaderArgs) => {
     if (typeof session.get("X-Board") === "undefined") {
         return redirect("/kanban/new")
     }
-    const tasks = await getKanbanItems({page: 0, limit: 30, session});
-    console.log(tasks)
+    const kanbanData = await getKanban({page: 0, limit: 30, session})
 
-    return z.array(taskSchema).parse(tasks);
+    return {
+        items: z.array(taskSchema).parse(kanbanData.items),
+        labels: kanbanData.labels
+    };
 }
 
 export default function TaskPage() {
-    const items = useLoaderData() as Item[];
+    const loaderData = useLoaderData();
+    // @ts-ignore
+    const items = loaderData.items as Item[];
+    // @ts-ignore
+    const labels = loaderData.labels.map(item => ({value: item.Name, ...item}));
     const download = async () => {
         const downloadLink = await downloadReport({
             session: {
@@ -84,14 +91,14 @@ export default function TaskPage() {
                     </div>
                     <div className="flex items-center space-x-2">
                         <Button
-                            className="bg-[#1D6F42] text-white hover:text-[#1D6F42] hover:border-2 hover:border-[#1D6F42] transition-all"
+                            className="bg-[#1D6F42] hover:bg-[#1D6F42] text-white hover:border-2 hover:border-[#fff] transition-all"
                             onClick={download}>
                             <FileSpreadsheet className="w-4 h-4 mr-2"/>
                             Download Report
                         </Button>
                     </div>
                 </div>
-                <DataTable data={items} columns={columns}/>
+                <DataTable labels={labels} data={items} columns={columns}/>
             </div>
         </>
     );

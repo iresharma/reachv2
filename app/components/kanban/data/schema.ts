@@ -1,7 +1,11 @@
 import { z } from "zod";
 
-// We're keeping a simple non-relational schema here.
-// IRL, you will have a schema for your data models.
+export const  commentSchema = z.object({
+  Id: z.string(),
+  UserId: z.string(),
+  Message: z.string()
+});
+
 export const taskSchema = z.object({
   Id: z.string(),
   Title: z.string(),
@@ -13,6 +17,7 @@ export const taskSchema = z.object({
     Color: z.string(),
   }),
   Links: z.string(),
+  Comments: z.array(commentSchema).optional()
 });
 
 export type Item = z.infer<typeof taskSchema>;

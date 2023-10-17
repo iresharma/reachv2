@@ -11,23 +11,30 @@ import {
   ListOrderedIcon,
   ListUnorderedIcon,
 } from "@primer/octicons-react";
+import {Button} from "~/components/ui/button";
 
-const Tiptap = ({ content }: { content: string }) => {
+export type TipTapProps = {
+  content: string;
+  showButton?: boolean;
+  buttonAction?: (content: string) => Promise<void>;
+}
+
+const Tiptap = ({ content, showButton, buttonAction }: TipTapProps) => {
   const editor = useEditor({
     extensions: [StarterKit],
     editorProps: {
       attributes: {
         class:
-          "unreset min-h-[150px] dark:bg-zinc-900 bg-zinc-200 p-4 pt-0 m-3 ml-0",
+          `unreset p-4 pt-0 m-3 ml-0 ${showButton ? "min-h-[70px]" : "min-h-[150px]"}`,
       },
     },
     content: content,
   });
 
   return (
-    <div className="dark:bg-zinc-900 bg-zinc-200 rounded-md mr-6 pr-0">
+    <div className="border border-zinc-900 dark:border-zinc-700 rounded-md mr-6 pr-0 shadow-sm">
       <div className="flex justify-between p-4 pb-2 border-b border-zinc-900 dark:border-zinc-700">
-        <span className="text-sm">
+        <span className="text-xs rounded-sm bg-zinc-100 dark:bg-zinc-700 p-2">
           <MarkdownIcon className="mr-1" />
           Markdown Supported
         </span>
@@ -49,6 +56,9 @@ const Tiptap = ({ content }: { content: string }) => {
         </div>
       </div>
       <EditorContent editor={editor} />
+      {showButton && <div className="flex justify-end pb-2 pr-4 mr-4 mb-2">
+        <Button onClick={() => buttonAction ? buttonAction(content) : null } size="sm">Add Comment</Button>
+      </div>}
     </div>
   );
 };

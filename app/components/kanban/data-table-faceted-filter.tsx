@@ -71,8 +71,9 @@ export function DataTableFacetedFilter<TData, TValue>({
                         variant="secondary"
                         key={option.value}
                         className="rounded-sm px-1 font-normal"
+                        style={{ backgroundColor: `#${option.Color}` }}
                       >
-                        {option.label}
+                        {title === "Label" ? option.Name : option.label}
                       </Badge>
                     ))
                 )}
@@ -118,11 +119,12 @@ export function DataTableFacetedFilter<TData, TValue>({
                       <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
                     )}
                     <span>{option.label}</span>
-                    {facets?.get(option.value) && (
+                    {title !== "Label" && facets?.get(option.value) && (
                       <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
                         {facets.get(option.value)}
                       </span>
                     )}
+                    {title === "Label" && <Badge style={{backgroundColor: `#${option.Color}`}}>{option.Name}</Badge> }
                   </CommandItem>
                 );
               })}

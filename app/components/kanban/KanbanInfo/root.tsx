@@ -9,7 +9,15 @@ import {
 } from "~/components/ui/table";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
-import { Copy, Trash2Icon } from "lucide-react";
+import {BadgePlus, Copy, Trash2Icon} from "lucide-react";
+import {CommentBox, CommentDisplay} from "~/components/kanban/KanbanInfo/Comment";
+import * as React from "react";
+
+export type Comment = {
+  Id: string;
+  UserId: string;
+  Message: string;
+}
 
 export type Item = {
   Title: string,
@@ -21,7 +29,8 @@ export type Item = {
     Color: string,
     Name: string
   },
-  Links: string
+  Links: string;
+  Comments?: Comment[];
 }
 
 export default function KanbanSheet({ item }: { item: Item }) {
@@ -54,7 +63,7 @@ export default function KanbanSheet({ item }: { item: Item }) {
     return colorClass;
   };
   return (
-    <div>
+    <div className="overflow-auto">
       <div className="border-b-2 border-zinc-200 dark:border-zinc-900 p-6">
         <h5 className="text-gray-500">{item.Id}</h5>
         <Textarea
@@ -72,11 +81,14 @@ export default function KanbanSheet({ item }: { item: Item }) {
         </p>
       </div>
       <div style={{ gridTemplateColumns: "3fr 1fr" }} className="grid p-6">
-        <div>
+        <div className="h-[80vh] overflow-y-scroll">
           <Tiptap content={item.Desc} />
-          <h3>Comments</h3>
+          <h3 className="text-xl mt-8 mb-4" >Comments</h3>
+          {item.Comments?.map((val, index) => <CommentDisplay message={val.Message} />)}
+          <CommentBox />
+          <div className="h-[10vh]" />
         </div>
-        <div>
+        <div className="ml-4">
           <Table className="mt-2">
             <TableBody>
               <TableRow className="border-0">
@@ -101,12 +113,13 @@ export default function KanbanSheet({ item }: { item: Item }) {
                       <TableCell className="p-2 w-8/12">{JSON.parse(item.Links)[val]}</TableCell>
                     </TableRow>
                 ))}
-              <TableRow className="border-0">
-                <TableCell className="p-2 font-bold ">dummy</TableCell>
-                <TableCell className="p-2 w-8/12">dummy</TableCell>
-              </TableRow>
             </TableBody>
           </Table>
+
+          <Button variant="ghost" size="sm" className="pl-2 flex w-full justify-start items-center">
+            <BadgePlus className="mr-2 h-4 w-4"/>
+            Add New link
+          </Button>
           <Button
             variant="ghost"
             className="pl-2 flex w-full justify-start items-center"

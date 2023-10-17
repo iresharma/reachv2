@@ -31,11 +31,13 @@ import KanbanSheet from "~/components/kanban/KanbanInfo/root";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  labels: any;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  labels
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -71,7 +73,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
+      <DataTableToolbar labels={labels} table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>

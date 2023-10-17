@@ -10,10 +10,12 @@ import { DataTableFacetedFilter } from "./data-table-faceted-filter";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
+  labels: any;
 }
 
 export function DataTableToolbar<TData>({
   table,
+  labels
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0;
 
@@ -35,18 +37,11 @@ export function DataTableToolbar<TData>({
             options={statuses}
           />
         )}
-        {table.getColumn("priority") && (
-          <DataTableFacetedFilter
-            column={table.getColumn("priority")}
-            title="Priority"
-            options={priorities}
-          />
-        )}
           {table.getColumn("label") && (
               <DataTableFacetedFilter
                   column={table.getColumn("label")}
                   title="Label"
-                  options={priorities}
+                  options={labels}
               />
           )}
         {isFiltered && (

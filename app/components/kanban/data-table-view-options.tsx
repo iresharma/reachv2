@@ -25,12 +25,12 @@ export function DataTableViewOptions() {
     }
     return (
         <>
-            <Button variant="ghost" size="sm" className="ml-auto hidden h-8 lg:flex" onClick={() => openSheet(true)}>
+            <Button variant="ghost" size="sm" className="ml-auto hidden h-8 lg:flex mr-2" onClick={() => openSheet(true)}>
                 <BadgePlus className="mr-2 h-4 w-4"/>
                 Add New Label
             </Button>
-            <Button variant="outline" size="sm" className="ml-auto hidden h-8 lg:flex" onClick={() => openSheet(true)}>
-                <PlusCircledIcon className="mr-2 h-4 w-4"/>
+            <Button size="sm" className="ml-auto hidden h-8 lg:flex hover:bg-white bg-gray-400 text-black" onClick={() => openSheet(true)}>
+                <PlusCircledIcon className="mr-2 h-4 w-4 text-black"/>
                 Add New
             </Button>
             <Sheet open={sheet}>

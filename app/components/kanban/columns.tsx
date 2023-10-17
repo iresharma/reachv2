@@ -12,6 +12,7 @@ import {
     QuestionMarkCircledIcon,
     StopwatchIcon,
 } from "@radix-ui/react-icons";
+import {MessagesSquare} from "lucide-react";
 
 export const columns: ColumnDef<Item>[] = [
     {
@@ -51,8 +52,7 @@ export const columns: ColumnDef<Item>[] = [
         ),
         cell: ({row}) => <div className={"w-[" + row.original.Label.Name.length + "ch]"}>
             <Badge
-                variant="outline"
-                className="text-black"
+                variant="secondary"
                 style={{backgroundColor: `#${row.original.Label.Color}`}}
             >
                 {row.original.Label.Name}
@@ -60,6 +60,7 @@ export const columns: ColumnDef<Item>[] = [
         </div>,
         enableSorting: false,
         enableHiding: false,
+        filterFn: (row, columnId, filterValue, addMeta) => filterValue.includes(row.original.Label.Name)
     },
     {
         accessorKey: "title",
@@ -67,10 +68,19 @@ export const columns: ColumnDef<Item>[] = [
             <DataTableColumnHeader column={column} title="Title"/>
         ),
         cell: ({row}) => {
-            return (
-                <span className="max-w-[500px] truncate font-medium">
-            {row.original.Title}
-          </span>
+            return (<div className="flex flex-row justify-between items-center">
+                    <div>
+                        <h6 className="font-bold">{row.original.Title}</h6>
+                        <span className="max-w-[500px] text-gray-500 truncate">
+                            {row.original.Desc}
+                        </span>
+                    </div>
+                    {row.original.Comments?.length > 0 && <div>
+                        <Badge variant="outline" className="text-gray-500">
+                            <MessagesSquare className="h-4 w-4 mr-2"/> {row.original.Comments?.length}
+                        </Badge>
+                    </div>}
+            </div>
             );
         },
     },
@@ -139,8 +149,14 @@ export const columns: ColumnDef<Item>[] = [
                 </div>
             );
         },
-        filterFn: (row, id, value) => {
-            return value.includes(row.getValue(id));
+        filterFn: (row, columnId, filterValue, addMeta) => {
+            switch (row.original.Status) {
+                case 0: return filterValue.includes("todo")
+                case 1: return filterValue.includes("in progress")
+                case 2: return filterValue.includes("done")
+                case 3: return filterValue.includes("canceled")
+                case 4: return filterValue.includes("completed")
+            }
         },
     },
     {

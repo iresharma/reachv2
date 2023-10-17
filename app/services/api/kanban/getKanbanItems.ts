@@ -1,8 +1,9 @@
 import {Session, SessionData} from "@remix-run/node";
+import {Item} from "~/components/kanban/KanbanInfo/root";
 
 type input = { page: number; limit: number; session: Session<SessionData, SessionData>; };
 
-export default async function getKanbanItems({ page, limit, session }: input) {
+export default async function getKanbanItems({ page, limit, session }: input): Promise<Item[]> {
     const myHeaders = new Headers();
     myHeaders.append("X-UserAccount", session.get("X-UserAccount"));
     myHeaders.append("X-Session", session.get("X-Session")!);
@@ -20,5 +21,5 @@ export default async function getKanbanItems({ page, limit, session }: input) {
         requestOptions,
     );
     const data = await resp.json();
-    return data["Items"];
+    return data["Items"] as Item[];
 }
