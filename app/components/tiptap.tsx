@@ -12,14 +12,16 @@ import {
   ListUnorderedIcon,
 } from "@primer/octicons-react";
 import {Button} from "~/components/ui/button";
+import {useEffect} from "react";
 
 export type TipTapProps = {
   content: string;
   showButton?: boolean;
   buttonAction?: (content: string) => Promise<void>;
+  onChange: (content: string) => void;
 }
 
-const Tiptap = ({ content, showButton, buttonAction }: TipTapProps) => {
+const Tiptap = ({ content, showButton, buttonAction, onChange }: TipTapProps) => {
   const editor = useEditor({
     extensions: [StarterKit],
     editorProps: {
@@ -28,7 +30,13 @@ const Tiptap = ({ content, showButton, buttonAction }: TipTapProps) => {
           `unreset p-4 pt-0 m-3 ml-0 ${showButton ? "min-h-[70px]" : "min-h-[150px]"}`,
       },
     },
-    content: content,
+    onCreate: () => {
+      editor?.commands.setContent(JSON.parse(content))
+    },
+    onBlur: () => {
+      const data = JSON.stringify(editor?.getJSON());
+      onChange(data ?? "");
+    },
   });
 
   return (

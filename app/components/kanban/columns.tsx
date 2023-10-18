@@ -13,6 +13,7 @@ import {
     StopwatchIcon,
 } from "@radix-ui/react-icons";
 import {MessagesSquare} from "lucide-react";
+import TipTapText from "~/components/misc-components/tiptapToText";
 
 export const columns: ColumnDef<Item>[] = [
     {
@@ -71,11 +72,9 @@ export const columns: ColumnDef<Item>[] = [
             return (<div className="flex flex-row justify-between items-center">
                     <div>
                         <h6 className="font-bold">{row.original.Title}</h6>
-                        <span className="max-w-[500px] text-gray-500 truncate">
-                            {row.original.Desc}
-                        </span>
+                        <TipTapText content={row.original.Desc} className="max-w-[500px] text-gray-500 truncate" />
                     </div>
-                    {row.original.Comments?.length > 0 && <div>
+                    {(row.original.Comments !== undefined && row.original.Comments.length > 0) && <div>
                         <Badge variant="outline" className="text-gray-500">
                             <MessagesSquare className="h-4 w-4 mr-2"/> {row.original.Comments?.length}
                         </Badge>
@@ -83,6 +82,9 @@ export const columns: ColumnDef<Item>[] = [
             </div>
             );
         },
+        filterFn: (row, columnId, filterValue, addMeta) => {
+            return row.original.Title.includes(filterValue) || row.original.Desc.includes(filterValue)
+        }
     },
     {
         accessorKey: "status",

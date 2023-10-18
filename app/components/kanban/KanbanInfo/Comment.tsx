@@ -14,7 +14,7 @@ import {
 import {DotsHorizontalIcon} from "@radix-ui/react-icons";
 
 export const CommentBox = () => {
-    const [comment, setComment] = useState("");
+    const [comment, setComment] = useState("{}");
     const submit = async (content: string) => {}
     return <>
         <Tiptap content={comment} showButton={true} buttonAction={submit} />
