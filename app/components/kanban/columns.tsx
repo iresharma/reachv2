@@ -13,7 +13,7 @@ import {
     StopwatchIcon,
 } from "@radix-ui/react-icons";
 import {MessagesSquare} from "lucide-react";
-import TipTapText from "~/components/misc-components/tiptapToText";
+import {TipTapText} from "~/components/misc/tiptapUtils";
 
 export const columns: ColumnDef<Item>[] = [
     {

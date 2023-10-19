@@ -12,13 +12,12 @@ import {
   ListUnorderedIcon,
 } from "@primer/octicons-react";
 import {Button} from "~/components/ui/button";
-import {useEffect} from "react";
 
 export type TipTapProps = {
   content: string;
   showButton?: boolean;
   buttonAction?: (content: string) => Promise<void>;
-  onChange: (content: string) => void;
+  onChange?: (content: string) => void;
 }
 
 const Tiptap = ({ content, showButton, buttonAction, onChange }: TipTapProps) => {
@@ -35,9 +34,16 @@ const Tiptap = ({ content, showButton, buttonAction, onChange }: TipTapProps) =>
     },
     onBlur: () => {
       const data = JSON.stringify(editor?.getJSON());
-      onChange(data ?? "");
+      onChange !== undefined && onChange(data ?? "");
     },
   });
+
+  const buttonActionWrapper = () => {
+    if(buttonAction !== undefined) {
+      buttonAction(content);
+      editor?.commands.clearContent();
+    }
+  }
 
   return (
     <div className="border border-zinc-900 dark:border-zinc-700 rounded-md mr-6 pr-0 shadow-sm">
@@ -65,7 +71,7 @@ const Tiptap = ({ content, showButton, buttonAction, onChange }: TipTapProps) =>
       </div>
       <EditorContent editor={editor} />
       {showButton && <div className="flex justify-end pb-2 pr-4 mr-4 mb-2">
-        <Button onClick={() => buttonAction ? buttonAction(content) : null } size="sm">Add Comment</Button>
+        <Button onClick={buttonActionWrapper} size="sm">Add Comment</Button>
       </div>}
     </div>
   );

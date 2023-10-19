@@ -4,6 +4,7 @@ import {json, LoaderArgs, V2_MetaFunction} from "@remix-run/node";
 import {getSession} from "~/session";
 import {useLoaderData} from "react-router";
 import {useEffect} from "react";
+import {secureLocalStorage} from "~/services/utils/secureLocalstorage";
 
 export const meta: V2_MetaFunction = () => {
   return [
@@ -20,10 +21,11 @@ export const loader = async ({request}: LoaderArgs) => {
 }
 
 export default function DashboardPage() {
+  // @ts-ignore
   const {session} = useLoaderData();
   useEffect(() => {
     Object.keys(session.data).map((val) => {
-      localStorage.setItem(val, session.data[val]);
+      secureLocalStorage.setItem(val, session.data[val]);
     })
   })
   return (

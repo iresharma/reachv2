@@ -12,6 +12,7 @@ import unresetStyles from "~/styles/misc-components/unreset.css";
 import downloadReport from "~/services/api/kanban/getDownloadReport"
 import type {Item} from "~/components/kanban/KanbanInfo/root";
 import getKanban from "~/services/api/kanban/getKanban";
+import {secureLocalStorage} from "~/services/utils/secureLocalstorage";
 
 
 export const meta: V2_MetaFunction = () => {
@@ -52,10 +53,10 @@ export default function TaskPage() {
     const download = async () => {
         const downloadLink = await downloadReport({
             session: {
-                UserAccount: localStorage.getItem("X-UserAccount")!,
-                Session: localStorage.getItem("X-Session")!,
-                Auth: localStorage.getItem("X-Auth")!,
-                Board: localStorage.getItem("X-Board")!,
+                UserAccount: secureLocalStorage.getItem("X-UserAccount")!,
+                Session: secureLocalStorage.getItem("X-Session")!,
+                Auth: secureLocalStorage.getItem("X-Auth")!,
+                Board: secureLocalStorage.getItem("X-Board")!,
             }
         });
         const data = await fetch(downloadLink)

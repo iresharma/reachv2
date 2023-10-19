@@ -20,7 +20,7 @@ import {
 import {useState} from "react";
 import {Form, useSubmit} from "@remix-run/react";
 import {emailExists} from "~/services/api/auth/emailexists";
-import Loader from "~/components/misc-components/loader";
+import Loader from "~/components/misc/loader";
 
 export function AuthTabs() {
     const submitRegister = useSubmit();

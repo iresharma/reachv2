@@ -38,6 +38,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
+    "crypto-es": "^2.0.4",
     "data-fns": "^1.1.0",
     "date-fns": "^2.30.0",
     "isbot": "^3.6.8",

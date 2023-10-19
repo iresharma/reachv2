@@ -1,9 +1,8 @@
 import Tiptap from "~/components/tiptap";
 import {useState} from "react";
-import {Card, CardHeader} from "~/components/ui/card";
+import {Card} from "~/components/ui/card";
 import {Avatar, AvatarImage} from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
-import {ChevronRight} from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,12 +11,33 @@ import {
     DropdownMenuTrigger
 } from "~/components/ui/dropdown-menu";
 import {DotsHorizontalIcon} from "@radix-ui/react-icons";
+import {TipTapRenderer} from "~/components/misc/tiptapUtils";
+import addComment from "~/services/api/kanban/addComment";
+import {secureLocalStorage} from "~/services/utils/secureLocalstorage";
+import {useRevalidator} from "@remix-run/react";
 
-export const CommentBox = () => {
+type CommentBoxProps = { item_id: string; addCommentToState: (data: object) => void };
+
+export const CommentBox = ({item_id, addCommentToState}: CommentBoxProps) => {
     const [comment, setComment] = useState("{}");
-    const submit = async (content: string) => {}
+    const revalidator = useRevalidator();
+    const submit = async (content: string) => {
+        const data = await addComment({
+            session: {
+                UserAccount: secureLocalStorage.getItem("X-UserAccount")!,
+                Session: secureLocalStorage.getItem("X-Session")!,
+                Auth: secureLocalStorage.getItem("X-Auth")!,
+                Board: secureLocalStorage.getItem("X-Board")!,
+            },
+            message: content,
+            item: item_id,
+        })
+        addCommentToState(data);
+        setComment("");
+        revalidator.revalidate();
+    }
     return <>
-        <Tiptap content={comment} showButton={true} buttonAction={submit} />
+        <Tiptap content={comment} showButton={true} buttonAction={submit} onChange={setComment} />
     </>
 }
 
@@ -69,8 +89,6 @@ export const CommentDisplay = ({message}: {message: string}) => {
                     </DropdownMenu>
                 </div>
             </div>
-            <p className="text-sm font-normal p-4 px-2">
-                {message}
-            </p>
+            <TipTapRenderer content={message} />
         </Card>
 }

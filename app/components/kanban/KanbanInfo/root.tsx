@@ -28,6 +28,7 @@ import {
 } from "@radix-ui/react-icons";
 import updateItem from "~/services/api/kanban/updateItem";
 import {useRevalidator} from "@remix-run/react";
+import {secureLocalStorage} from "~/services/utils/secureLocalstorage";
 
 export type Comment = {
     Id: string;
@@ -57,10 +58,10 @@ export default function KanbanSheet({item}: { item: Item }) {
             if (JSON.stringify(stateItem) !== JSON.stringify(item)) {
                 const out = await updateItem({
                     session: {
-                        UserAccount: localStorage.getItem("X-UserAccount")!,
-                        Session: localStorage.getItem("X-Session")!,
-                        Auth: localStorage.getItem("X-Auth")!,
-                        Board: localStorage.getItem("X-Board")!,
+                        UserAccount: secureLocalStorage.getItem("X-UserAccount")!,
+                        Session: secureLocalStorage.getItem("X-Session")!,
+                        Auth: secureLocalStorage.getItem("X-Auth")!,
+                        Board: secureLocalStorage.getItem("X-Board")!,
                     }, item: stateItem
                 })
                 if(out) revalidator.revalidate()
@@ -96,6 +97,19 @@ export default function KanbanSheet({item}: { item: Item }) {
         e.target.style.height = "inherit";
         e.target.style.height = `${Math.min(e.target.scrollHeight, 200)}px`;
     };
+    const addLink = () => {
+        const links = stateItem.Links !== "" ? JSON.parse(stateItem.Links) : {};
+        links["key"] = "value";
+        const stringify = JSON.stringify(links);
+        console.log(stringify)
+        setStateItem({...stateItem, Links: stringify})
+    }
+
+    const addCommentToState = (data: Comment) => {
+        if(stateItem.Comments === undefined) setStateItem({...stateItem, Comments: [data]})
+        else setStateItem({...stateItem, Comments: [...stateItem.Comments, data]})
+    }
+
     return (
         <div className="overflow-auto">
             <div className="border-b-2 border-zinc-200 dark:border-zinc-900 p-6">
@@ -134,8 +148,8 @@ export default function KanbanSheet({item}: { item: Item }) {
                     <Tiptap content={stateItem.Desc}
                             onChange={(content) => setStateItem({...stateItem, Desc: content})}/>
                     <h3 className="text-xl mt-8 mb-4">Comments</h3>
-                    {item.Comments?.map((val, index) => <CommentDisplay message={val.Message} key={index}/>)}
-                    <CommentBox/>
+                    {stateItem.Comments?.map((val, index) => <CommentDisplay message={JSON.parse(val.Message)} key={index}/>)}
+                    <CommentBox item_id={stateItem.Id} addCommentToState={addCommentToState}/>
                     <div className="h-[10vh]"/>
                 </div>
                 <div className="ml-4">
@@ -152,12 +166,7 @@ export default function KanbanSheet({item}: { item: Item }) {
                                     </Badge>
                                 </TableCell>
                             </TableRow>
-                            {item.Links === "" && <TableRow className="border-0">
-                                <TableCell colSpan={2}>
-                                    No values enter below to add
-                                </TableCell>
-                            </TableRow>}
-                            {item.Links !== "" && Object.keys(JSON.parse(item.Links)).map((val, index) => (
+                            {stateItem.Links !== "" && Object.keys(JSON.parse(stateItem.Links)).map((val, index) => (
                                 <TableRow className="border-0" key={index}>
                                     <TableCell className="p-2 font-bold ">{val}</TableCell>
                                     <TableCell className="p-2 w-8/12">{JSON.parse(item.Links)[val]}</TableCell>
@@ -166,7 +175,7 @@ export default function KanbanSheet({item}: { item: Item }) {
                         </TableBody>
                     </Table>
 
-                    <Button variant="ghost" size="sm" className="pl-2 flex w-full justify-start items-center">
+                    <Button variant="ghost" size="sm" className="pl-2 flex w-full justify-start items-center" onClick={addLink}>
                         <BadgePlus className="mr-2 h-4 w-4"/>
                         Add New link
                     </Button>

@@ -8,6 +8,7 @@ import {useRef, useState} from "react";
 import {Badge} from "~/components/ui/badge";
 import {useRevalidator} from "@remix-run/react";
 import createLabel from "~/services/api/kanban/createLabel";
+import {secureLocalStorage} from "~/services/utils/secureLocalstorage";
 
 export const CreateLabel = () => {
     const [color, setColor] = useState("#808080");
@@ -17,10 +18,10 @@ export const CreateLabel = () => {
     const createLabelWrapper = async () => {
         await createLabel({
             session: {
-                UserAccount: localStorage.getItem("X-UserAccount")!,
-                Session: localStorage.getItem("X-Session")!,
-                Auth: localStorage.getItem("X-Auth")!,
-                Board: localStorage.getItem("X-Board")!,
+                UserAccount: secureLocalStorage.getItem("X-UserAccount")!,
+                Session: secureLocalStorage.getItem("X-Session")!,
+                Auth: secureLocalStorage.getItem("X-Auth")!,
+                Board: secureLocalStorage.getItem("X-Board")!,
             },
             labelData: {
                 color: color.substring(1), label: name
