@@ -1,4 +1,4 @@
-import Tiptap from "~/components/tiptap";
+import Tiptap from "~/components/misc/tiptap";
 import {useState} from "react";
 import {Card} from "~/components/ui/card";
 import {Avatar, AvatarImage} from "~/components/ui/avatar";

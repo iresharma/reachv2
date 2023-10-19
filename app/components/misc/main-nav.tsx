@@ -40,14 +40,14 @@ export function MainNav({
         Kanban
       </a>
       <a
-        href="/examples/dashboard"
+        href="/storage"
         className="text-sm flex items-center font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         <CloudCog className="w-4 h-4 mr-2" />
         Storage
       </a>
       <a
-        href="/examples/dashboard"
+        href="/page"
         className="text-sm flex items-center font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         <ChromeIcon className="w-4 h-4 mr-2" />

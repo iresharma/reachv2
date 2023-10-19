@@ -12,11 +12,11 @@ import {
     ScrollRestoration, useRouteError,
 } from "@remix-run/react";
 import {useState} from "react";
-import {MainNav} from "~/components/main-nav";
-import {UserNav} from "~/components/user-nav";
+import {MainNav} from "~/components/misc/main-nav";
+import {UserNav} from "~/components/misc/user-nav";
 import {Input} from "~/components/ui/input";
 import {Toaster} from "~/components/ui/toaster";
-import {CommandPallet} from "~/components/command-pallet";
+import {CommandPallet} from "~/components/misc/command-pallet";
 import {commitSession, getSession} from "~/session";
 import {json} from "@remix-run/node";
 import {redirect, useLoaderData} from "react-router";

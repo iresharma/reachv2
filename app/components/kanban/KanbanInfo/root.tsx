@@ -1,6 +1,6 @@
 import {Textarea} from "~/components/ui/textarea";
 import {useEffect, useState} from "react";
-import Tiptap from "~/components/tiptap";
+import Tiptap from "~/components/misc/tiptap";
 import {
     Table,
     TableBody,

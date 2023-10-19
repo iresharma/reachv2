@@ -33,7 +33,7 @@ export const links: LinksFunction = () => {
 
 export const loader = async ({request}: LoaderArgs) => {
     const session = await getSession(request.headers.get("Cookie"))
-    if (typeof session.get("X-Board") === "undefined") {
+    if (typeof session.get("X-Board") === "undefined" || session.get("X-Board") === "") {
         return redirect("/kanban/new")
     }
     const kanbanData = await getKanban({page: 0, limit: 30, session})

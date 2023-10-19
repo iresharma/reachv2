@@ -1,9 +1,16 @@
 import {Button} from "~/components/ui/button";
 import kanbanCover from "~/assets/kanban-cover.png"
-import {ActionArgs, LoaderArgs} from "@remix-run/node";
+import {ActionArgs, LoaderArgs, V2_MetaFunction} from "@remix-run/node";
 import {commitSession, getSession} from "~/session";
 import {createKanban} from "~/services/api/kanban/createKanban";
 import {redirect} from "react-router";
+
+export const meta: V2_MetaFunction = () => {
+    return [
+        {title: "Kanban - New"},
+        {name: "description", content: "Create new kanban board"},
+    ];
+};
 
 export const loader = async ({ request }: LoaderArgs) => {
     const session = await getSession(request.headers.get("Cookie"));
