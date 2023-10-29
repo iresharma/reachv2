@@ -29,6 +29,8 @@ import {
 import updateItem from "~/services/api/kanban/updateItem";
 import {useRevalidator} from "@remix-run/react";
 import {secureLocalStorage} from "~/services/utils/secureLocalstorage";
+import {useClipboard} from "@mantine/hooks";
+import {toast} from "~/components/ui/use-toast";
 
 export type Comment = {
     Id: string;
@@ -52,6 +54,13 @@ export type Item = {
 
 export default function KanbanSheet({item}: { item: Item }) {
     const [stateItem, setStateItem] = useState(item);
+    const clipboard = useClipboard({ timeout: 500 });
+    const copy = () => {
+        clipboard.copy(`localhost:3000/kanban?id=${item.Id}`)
+        toast({
+            title: "Copied !"
+        })
+    }
     const revalidator = useRevalidator();
     useEffect(() => {
         const update = async () => {
@@ -182,6 +191,7 @@ export default function KanbanSheet({item}: { item: Item }) {
                     <Button
                         variant="ghost"
                         className="pl-2 flex w-full justify-start items-center"
+                        onClick={copy}
                     >
                         <Copy className="text-xs mr-2 h-[15px] w-[15px]"/>
                         Copy link

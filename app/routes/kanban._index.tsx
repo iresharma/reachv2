@@ -5,7 +5,6 @@ import {FileSpreadsheet} from "lucide-react";
 import {getSession} from "~/session";
 import {redirect, useLoaderData} from "react-router";
 import {taskSchema} from "~/components/kanban/data/schema";
-import getKanbanItems from "~/services/api/kanban/getKanbanItems";
 import {LinksFunction, LoaderArgs, V2_MetaFunction} from "@remix-run/node";
 import {z} from "zod";
 import unresetStyles from "~/styles/misc-components/unreset.css";
@@ -13,6 +12,8 @@ import downloadReport from "~/services/api/kanban/getDownloadReport"
 import type {Item} from "~/components/kanban/KanbanInfo/root";
 import getKanban from "~/services/api/kanban/getKanban";
 import {secureLocalStorage} from "~/services/utils/secureLocalstorage";
+import getKanbanItem from "~/services/api/kanban/getKanbanItem";
+import {useEffect, useState} from "react";
 
 
 export const meta: V2_MetaFunction = () => {
@@ -37,19 +38,33 @@ export const loader = async ({request}: LoaderArgs) => {
         return redirect("/kanban/new")
     }
     const kanbanData = await getKanban({page: 0, limit: 30, session})
-
+    let kanbanItem = null;
+    const id = new URL(request.url).searchParams.get('id');
+    console.log(id)
+    if (typeof id !== 'undefined' && id !== null) {
+        kanbanItem = await getKanbanItem({id: id ?? "", session});
+    }
     return {
         items: z.array(taskSchema).parse(kanbanData.items),
-        labels: kanbanData.labels
+        labels: kanbanData.labels,
+        item: kanbanItem
     };
 }
 
 export default function TaskPage() {
     const loaderData = useLoaderData();
+    const [activeItem, setActiveItem] = useState(null);
     // @ts-ignore
     const items = loaderData.items as Item[];
     // @ts-ignore
     const labels = loaderData.labels.map(item => ({value: item.Name, ...item}));
+    useEffect(() => {
+        // @ts-ignore
+        if(loaderData.item !== null)  {
+            // @ts-ignore
+            setActiveItem(loaderData.item);
+        }
+    }, []);
     const download = async () => {
         const downloadLink = await downloadReport({
             session: {
@@ -99,7 +114,7 @@ export default function TaskPage() {
                         </Button>
                     </div>
                 </div>
-                <DataTable labels={labels} data={items} columns={columns}/>
+                <DataTable activeItem={activeItem} labels={labels} data={items} columns={columns}/>
             </div>
         </>
     );

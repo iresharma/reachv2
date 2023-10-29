@@ -1,9 +1,10 @@
 import * as React from "react";
-import {
+import type {
   ColumnDef,
   ColumnFiltersState,
   SortingState,
-  VisibilityState,
+  VisibilityState} from "@tanstack/react-table";
+import {
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -27,17 +28,21 @@ import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
 import { Sheet, SheetContent } from "~/components/ui/sheet";
 import KanbanSheet from "~/components/kanban/KanbanInfo/root";
+import type {Item} from "~/components/kanban/data/schema";
+import {useEffect} from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   labels: any;
+  activeItem: Item | null;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
-  labels
+  labels,
+  activeItem
 }: DataTableProps<TData, TValue>) {
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
@@ -48,6 +53,13 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [sheet, openSheet] = React.useState(false);
   const [item, setItem] = React.useState({});
+  useEffect(() => {
+    if (activeItem !== null) {
+      console.log("lol")
+      setItem(activeItem);
+      openSheet(true);
+    }
+  }, [activeItem]);
 
   const table = useReactTable({
     data,
@@ -71,6 +83,7 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   });
 
+  // @ts-ignore
   return (
     <div className="space-y-4">
       <DataTableToolbar labels={labels} table={table} />
@@ -100,7 +113,6 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   onClick={() => {
                     openSheet(true);
-                    console.log(row);
                     setItem(row.original as any);
                   }}
                   key={row.id}

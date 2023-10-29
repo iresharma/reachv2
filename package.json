@@ -11,6 +11,7 @@
   "dependencies": {
     "-": "^0.0.1",
     "@hookform/resolvers": "^3.3.1",
+    "@mantine/hooks": "^7.1.7",
     "@primer/octicons-react": "^19.7.0",
     "@radix-ui/react-avatar": "^1.0.3",
     "@radix-ui/react-checkbox": "^1.0.4",
