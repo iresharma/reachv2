@@ -9,12 +9,24 @@ import PageLink from "~/components/page/link";
 import Style from "~/components/page/style";
 import buttonStyles from "~/styles/page/buttons.css";
 
-
 export const links: LinksFunction = () => {
     return [
         {
             rel: "stylesheet",
             href: buttonStyles
+        },
+        {
+            rel: "stylesheet",
+            href: "https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Agbalumo&family=Caveat&family=Dancing+Script&family=Edu+TAS+Beginner&family=Josefin+Sans&family=Oswald&family=Playfair+Display&family=Roboto+Condensed&family=Roboto+Slab&family=Shadows+Into+Light&display=swap"
+        },
+        {
+            rel: "preconnect",
+            crossOrigin: "true",
+            href: "https://fonts.gstatic.com"
+        },
+        {
+            rel: "preconnect",
+            href: "https://fonts.googleapis.com"
         }
     ];
 }
@@ -59,9 +71,9 @@ export default function PageView() {
                 </div>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr" }}>
-                <div className="p-10 py-6">
+                <div className="p-10 py-6 relative flex justify-center">
                     {/* eslint-disable-next-line jsx-a11y/iframe-has-title */}
-                    <iframe src="https://reach-page-server.vercel.app/iresharma" className="rounded-xl border-4 h-[70vh] m-auto"></iframe>
+                    <iframe src="https://reach-page-server.vercel.app/iresharma" className="rounded-xl border-4 h-[70vh] fixed"></iframe>
                 </div>
                 <div className="p-4">
                     <Tabs defaultValue="links" className="w-[60vw]">

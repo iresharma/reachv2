@@ -60,19 +60,40 @@
 
 *::-webkit-scrollbar-track
 {
-  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-  background-color: #262626;
+  -webkit-box-shadow: inset 0 0 6px rgba(200,200,200,0.3);
+  background-color: #cbcbcb;
   border-radius: 20px;
 }
 
 *::-webkit-scrollbar
 {
   width: 10px;
-  background-color: #262626;
+  background-color: #626262;
   border-radius: 20px;
 }
 
 *::-webkit-scrollbar-thumb
+{
+  background-color: #cbcbcb;
+  border: 2px solid #626262;
+  border-radius: 20px;
+}
+
+.dark *::-webkit-scrollbar-track
+{
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  background-color: #262626;
+  border-radius: 20px;
+}
+
+.dark *::-webkit-scrollbar
+{
+  width: 10px;
+  background-color: #262626;
+  border-radius: 20px;
+}
+
+.dark *::-webkit-scrollbar-thumb
 {
   background-color: #000000;
   border: 2px solid #262626;
