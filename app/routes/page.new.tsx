@@ -13,8 +13,8 @@ export const meta: V2_MetaFunction = () => {
 
 export const loader = async ({ request }: LoaderArgs) => {
     const session = await getSession(request.headers.get("Cookie"));
-    if(session.has("X-Storage")) {
-        return redirect("/storage")
+    if(session.has("X-Page")) {
+        return redirect("/page")
     }
     return null
 };

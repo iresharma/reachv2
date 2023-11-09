@@ -11,7 +11,7 @@ import {
     Scripts,
     ScrollRestoration, useRouteError,
 } from "@remix-run/react";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {MainNav} from "~/components/misc/main-nav";
 import {UserNav} from "~/components/misc/user-nav";
 import {Input} from "~/components/ui/input";
@@ -22,8 +22,9 @@ import {json} from "@remix-run/node";
 import {redirect, useLoaderData} from "react-router";
 import {validateSession} from "~/services/api/auth/validateSession";
 import NotFound from "~/components/misc/404";
-
-
+import {Button} from "~/components/ui/button";
+import {MoonIcon, SunIcon} from "lucide-react";
+import switchTheme from "~/services/utils/themeSwitcher";
 
 export const links: LinksFunction = () => [
     {rel: "stylesheet", href: styles},
@@ -68,11 +69,14 @@ export const loader = async ({request}) => {
 }
 
 export default function App() {
+    useEffect(() => {
+        switchTheme();
+    }, []);
     const loaderData = useLoaderData();
     // @ts-ignore
     const [isAuth] = useState(loaderData.auth === "true");
     return (
-        <html lang="en" className="dark">
+        <html lang="en" className="dark" id="html">
         <head>
             <meta charSet="utf-8"/>
             <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -90,6 +94,9 @@ export default function App() {
                             placeholder="Search..."
                             className="md:w-[100px] lg:w-[300px]"
                         />
+                        <Button variant="outline" onClick={() => switchTheme(localStorage.getItem("theme") ?? "dark")} size="icon">
+                            <SunIcon className="w-4 h-4"/>
+                        </Button>
                         <UserNav/>
                     </div>
                 </div>
