@@ -113,6 +113,7 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   onClick={() => {
                     openSheet(true);
+                    window.history.replaceState({}, "", "?id=" + row.original.Id)
                     setItem(row.original as any);
                   }}
                   key={row.id}
@@ -146,7 +147,10 @@ export function DataTable<TData, TValue>({
         <SheetContent
           className="p-0"
           style={{ width: "65vw" }}
-          onPointerDownOutside={() => openSheet(false)}
+          onPointerDownOutside={() => {
+            window.history.replaceState({}, "", "?id=")
+            openSheet(false)
+          }}
         >
           <KanbanSheet item={item} />
         </SheetContent>

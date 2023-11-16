@@ -37,7 +37,7 @@ export type Page = {
 }
 
 export default async function getPage(route: string): Promise<Page> {
-    const resp = await fetch("http://localhost:8080/page/iresharma")
+    const resp = await fetch(`http://localhost:8080/page/id/${route}`)
     const data = await resp.json();
     return data as Page;
 }

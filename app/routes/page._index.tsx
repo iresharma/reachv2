@@ -8,6 +8,7 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "~/components/ui/tabs";
 import PageLink from "~/components/page/link";
 import Style from "~/components/page/style";
 import buttonStyles from "~/styles/page/buttons.css";
+import {useRevalidator} from "@remix-run/react";
 
 export const links: LinksFunction = () => {
     return [
@@ -43,7 +44,7 @@ export const loader = async ({request}: LoaderArgs) => {
     if (typeof session.get("X-Page") === "undefined" || session.get("X-Page") === "") {
         return redirect("/page/new")
     }
-    const pageData = await getPage("iresharma");
+    const pageData = await getPage(session.get("X-Page"));
     return {
         page: pageData
     };
@@ -52,6 +53,7 @@ export const loader = async ({request}: LoaderArgs) => {
 export default function PageView() {
     // @ts-ignore
     const {page}: {page: Page} = useLoaderData();
+    const revalidator = useRevalidator();
     return <>
         <div className="h-full flex-1 flex-col space-y-8 flex">
             <div className="flex items-center justify-between space-y-2 border-b p-8">
@@ -83,7 +85,7 @@ export default function PageView() {
                             <TabsTrigger value="analytics">Analytics</TabsTrigger>
                         </TabsList>
                         <TabsContent value="links">
-                            <PageLink links={page.Links} />
+                            <PageLink revalidator={revalidator} links={page.Links.sort((a, b) => a.Sequence - b.Sequence)} />
                         </TabsContent>
                         <TabsContent value="styles">
                             <Style />

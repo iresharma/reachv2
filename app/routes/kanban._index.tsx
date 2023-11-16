@@ -40,8 +40,7 @@ export const loader = async ({request}: LoaderArgs) => {
     const kanbanData = await getKanban({page: 0, limit: 30, session})
     let kanbanItem = null;
     const id = new URL(request.url).searchParams.get('id');
-    console.log(id)
-    if (typeof id !== 'undefined' && id !== null) {
+    if (typeof id !== 'undefined' && id !== null && id !== "") {
         kanbanItem = await getKanbanItem({id: id ?? "", session});
     }
     return {

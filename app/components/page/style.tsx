@@ -4,12 +4,29 @@ import {Label} from "~/components/ui/label";
 import {Input} from "~/components/ui/input";
 import {Textarea} from "~/components/ui/textarea";
 import {Button} from "~/components/ui/button";
-import {Avatar, AvatarFallback} from "~/components/ui/avatar";
+import {Avatar, AvatarFallback, AvatarImage} from "~/components/ui/avatar";
 import {ImagePlusIcon} from "lucide-react";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../ui/select";
 import {HoverCard, HoverCardContent, HoverCardTrigger} from "../ui/hover-card";
 
 function HeaderEdit() {
+    const [imgUrl, setImgUrl] = useState("")
+    const uploadFile = () => {
+        const link = document.createElement('input')
+        link.setAttribute("type", "file")
+        link.click()
+        // @ts-ignore
+        link.onchange = (e) => {
+            // @ts-ignore
+            const file = e.target.files[0]
+            let reader = new FileReader()
+            reader.onload = () => {
+                // @ts-ignore
+                setImgUrl(reader.result)
+            }
+            reader.readAsDataURL(file);
+        }
+    }
     return <>
         <Card>
             <CardHeader>
@@ -22,8 +39,9 @@ function HeaderEdit() {
                 <div className="flex flex-col justify-center items-center space-y-4">
                     <Avatar className="w-24 h-24">
                         <AvatarFallback>CN</AvatarFallback>
+                        <AvatarImage src={imgUrl} />
                     </Avatar>
-                    <Button variant="secondary">
+                    <Button onClick={uploadFile} variant="secondary">
                         <ImagePlusIcon className="h-4 w-4 mr-2"/>
                         Upload
                     </Button>
@@ -120,9 +138,9 @@ function Meta() {
             </CardHeader>
             <CardContent>
                 <div className="grid gap-x-6" style={{ gridTemplateColumns: "1fr 1fr" }}>
-                    {Object.keys(tags).map(val => <div key={val} className="grid gap-4 my-2" style={{gridTemplateColumns: "1fr 2fr"}}>
+                    {Object.keys(tags).map(val => <div key={val} className="grid gap-4 my-2 items-center" style={{gridTemplateColumns: "1fr 2fr"}}>
                         <HoverCard>
-                            <HoverCardTrigger className="hover:underline cursor-help">{val}</HoverCardTrigger>
+                            <HoverCardTrigger className="hover:underline cursor-help capitalize">{val}</HoverCardTrigger>
                             <HoverCardContent>
                                 {tags[val]}
                                 <br />

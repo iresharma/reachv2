@@ -1,12 +1,25 @@
 import {DragDropContext, Draggable, Droppable, resetServerContext} from "react-beautiful-dnd";
 import {useListState} from "@mantine/hooks";
-import {GripVerticalIcon, Trash2Icon, BadgePlusIcon, PackagePlusIcon, Link} from "lucide-react"
+import {GripVerticalIcon, Trash2Icon, BadgePlusIcon, PackagePlusIcon} from "lucide-react"
 import {Pencil2Icon, ImageIcon} from "@radix-ui/react-icons"
 import {useState} from "react";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "~/components/ui/tooltip";
 import {Button} from "~/components/ui/button";
+import {Label} from "~/components/ui/label";
+import {Input} from "~/components/ui/input";
+import * as React from "react";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "~/components/ui/dialog"
+import CreatePageLink from "~/services/api/page/createLink";
 
-export default function PageLinks({links}) {
+export default function PageLinks({links, revalidator}) {
     const [state, handlers] = useListState(links ?? []);
     resetServerContext();
 
@@ -67,9 +80,7 @@ export default function PageLinks({links}) {
                 </Droppable>
             </DragDropContext>
             <div className="flex w-full space-x-4 justify-between">
-                <div className="w-full cursor-pointer border-dashed border-2 p-4 rounded-xl flex justify-center items-center">
-                    <BadgePlusIcon className="w-4 h-4 mr-2" />Add Link
-                </div>
+                <CreateLink revalidator={revalidator} sequence={links.length} />
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger asChild>
@@ -85,4 +96,62 @@ export default function PageLinks({links}) {
             </div>
         </div>
     </>
+}
+
+export function CreateLink({sequence, revalidator}) {
+    const [name, setName] = useState("")
+    const [link, setLink] = useState("");
+    const createLink = async () => {
+        await CreatePageLink({
+            Name: name,
+            Link: link,
+            Icon: null,
+            isSocialIcon: false,
+            sequence
+        })
+        revalidator.revalidate()
+    }
+    return (
+        <Dialog>
+            <DialogTrigger asChild>
+                <div className="w-full cursor-pointer border-dashed border-2 p-4 rounded-xl flex justify-center items-center">
+                    <BadgePlusIcon className="w-4 h-4 mr-2" />Add Link
+                </div>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                    <DialogTitle>Add new link</DialogTitle>
+                    <DialogDescription>
+                        Fill up the information below to
+                    </DialogDescription>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="name" className="text-right">
+                            Name
+                        </Label>
+                        <Input
+                            id="name"
+                            className="col-span-3"
+                            onChange={e => setName(e.target.value)}
+                        />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="username" className="text-right">
+                            Link
+                        </Label>
+                        <Input
+                            id="username"
+                            placeholder="https://iresharma.com"
+                            className="col-span-3"
+                            onChange={e => setLink(e.target.value)}
+                        />
+                    </div>
+                </div>
+                <DialogFooter>
+                    <Button onClick={createLink}>Save changes</Button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
+    )
 }

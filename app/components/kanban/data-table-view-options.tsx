@@ -4,11 +4,6 @@ import {Button} from "~/components/ui/button";
 import {Sheet, SheetContent} from "~/components/ui/sheet";
 import KanbanSheet from "~/components/kanban/KanbanInfo/root";
 import * as React from "react";
-import {BadgePlus} from "lucide-react";
-import {Popover, PopoverContent, PopoverTrigger} from "~/components/ui/popover";
-import { Label } from "../ui/label";
-import {Input} from "~/components/ui/input";
-import {ColorInput} from "~/components/ui/colorInput";
 import {CreateLabel} from "~/components/kanban/createLabel";
 
 const emptyData = {
