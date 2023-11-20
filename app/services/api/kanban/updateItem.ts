@@ -52,7 +52,7 @@ export default async function updateItem({session, item}: input): Promise<boolea
     };
 
     const resp = await fetch(
-        "http://localhost:8080/kanban/item",
+        window.ENV.API_DOMAIN + "/kanban/item",
         requestOptions
     );
     if(resp.status === 200) return true;

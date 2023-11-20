@@ -1,3 +1,5 @@
+import * as process from "process";
+
 export type SignupInput = {
     email: string;
     password: string;
@@ -16,7 +18,7 @@ export const signup = async ({ email, password }: SignupInput) => {
         body: urlencoded,
     };
     const resp = await fetch(
-        `http://localhost:8080/user`,
+        process.env.API_DOMAIN + `/user`,
         requestOptions,
     );
     console.log(resp.status)

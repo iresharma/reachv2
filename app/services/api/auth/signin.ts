@@ -1,5 +1,6 @@
 import {getSession} from "~/session";
 import {getUserAccount} from "~/services/api/auth/getUserAccount";
+import * as process from "process";
 
 export type Session = {
     session: string;
@@ -38,7 +39,7 @@ export const signIn = async ({
         body: urlencoded,
     };
     const resp = await fetch(
-        `http://localhost:8080/session`,
+        process.env.API_DOMAIN + `/session`,
         requestOptions,
     );
     const session = await getSession();

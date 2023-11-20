@@ -1,12 +1,6 @@
-export type CreateLinkInput = {
-    Name: string;
-    Link: string;
-    Icon?: string;
-    isSocialIcon?: boolean;
-    sequence: number;
-}
+import type {CreateLinkInput} from "~/services/api/page/createLink";
 
-export default async function CreatePageLink({Name, Link, Icon, isSocialIcon, sequence}: CreateLinkInput) {
+export default async function UpdateLink(link: CreateLinkInput) {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
     myHeaders.append("X-UserAccount", localStorage.getItem("X-UserAccount") ?? "");
@@ -15,14 +9,14 @@ export default async function CreatePageLink({Name, Link, Icon, isSocialIcon, se
     myHeaders.append("X-Page", localStorage.getItem("X-Page") ?? "");
 
     var urlencoded = new URLSearchParams();
-    urlencoded.append("Name", Name);
-    urlencoded.append("Link", Link);
-    urlencoded.append("Icon", Icon ?? "");
-    urlencoded.append("isSocialIcon", isSocialIcon ? String(isSocialIcon) : "false");
-    urlencoded.append("sequence", sequence.toString());
+    urlencoded.append("Name", link.Name);
+    urlencoded.append("Link", link.Link);
+    urlencoded.append("Icon", link.Icon ?? "");
+    urlencoded.append("isSocialIcon", link.isSocialIcon ? String(link.isSocialIcon) : "false");
+    urlencoded.append("sequence", link.sequence.toString());
 
     const requestOptions = {
-        method: "POST",
+        method: "PATCH",
         headers: myHeaders,
         body: urlencoded
     };

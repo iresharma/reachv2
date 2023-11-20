@@ -1,5 +1,6 @@
 import {Session, SessionData} from "@remix-run/node";
 import {Item} from "~/components/kanban/KanbanInfo/root";
+import * as process from "process";
 
 type input = { page: number; limit: number; session: Session<SessionData, SessionData>; };
 
@@ -16,7 +17,7 @@ export default async function getKanbanItems({ page, limit, session }: input): P
     };
 
     const resp = await fetch(
-        "http://localhost:8080/kanban/items?" +
+        process.env.API_DOMAIN + "/kanban/items?" +
         new URLSearchParams({ page: page.toString(), limit: limit.toString() }),
         requestOptions,
     );

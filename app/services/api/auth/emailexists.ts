@@ -7,7 +7,7 @@ export type EmailExistsOutput = {
 }
 
 export const emailExists = async ({email}: EmailExistsInput): Promise<EmailExistsOutput> => {
-    const resp = await fetch(`http://localhost:8080/user?email=${email}`);
+    const resp = await fetch(window.ENV.API_DOMAIN + `/user?email=${email}`);
     const data = await resp.json();
     return data.exists;
 }

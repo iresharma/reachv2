@@ -22,7 +22,7 @@ export default async function getDownloadReport({session}: input) {
     };
 
     const resp = await fetch(
-        "http://localhost:8080/kanban/export",
+        window.ENV.API_DOMAIN + "/kanban/export",
         requestOptions
     );
     const data = await resp.json();

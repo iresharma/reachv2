@@ -1,4 +1,5 @@
 import {Session, SessionData} from "@remix-run/node";
+import * as process from "process";
 
 type input = { session: Session<SessionData, SessionData>; };
 
@@ -15,7 +16,7 @@ export default async function getLabels({ session }: input) {
     };
 
     const resp = await fetch(
-        "http://localhost:8080/kanban/labels",
+        process.env.API_DOMAIN + "/kanban/labels",
         requestOptions
     );
     const data = await resp.json();

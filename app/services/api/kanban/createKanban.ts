@@ -1,3 +1,5 @@
+import * as process from "process";
+
 export type createKanbanInput = {
     session: string;
     auth: string;
@@ -16,7 +18,7 @@ export const createKanban = async (session: createKanbanInput): Promise<string> 
         headers: myHeaders,
     };
     const resp = await fetch(
-        `http://localhost:8080/kanban`,
+         process.env.API_DOMAIN + `/kanban`,
         requestOptions,
     );
     const data = await resp.json();

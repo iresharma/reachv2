@@ -30,7 +30,7 @@ export default async function createLabel({session, labelData}: input) {
     };
 
     const _ = await fetch(
-        "http://localhost:8080/kanban/label",
+        window.ENV.API_DOMAIN + "/kanban/label",
         requestOptions
     );
     return "OK";

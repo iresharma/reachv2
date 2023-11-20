@@ -1,3 +1,5 @@
+import * as process from "process";
+
 export type CreateUserAccountResponse = {
     id: string;
     name: string;
@@ -17,7 +19,7 @@ export const createUserAccount = async ({ name, session, auth }: any): Promise<C
         body: urlencoded,
     };
     const resp = await fetch(
-        `http://localhost:8080/userAccount`,
+        process.env.API_DOMAIN + `/userAccount`,
         requestOptions,
     );
     console.log()

@@ -18,7 +18,7 @@ export const validateSession = async (session: validateSessionInput): Promise<bo
         headers: myHeaders,
     };
     const resp = await fetch(
-        `http://localhost:8080/session`,
+        process.env.API_DOMAIN + `/session`,
         requestOptions,
     );
     if (resp.status !== 200) {

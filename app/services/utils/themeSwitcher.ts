@@ -15,8 +15,6 @@ export default function switchTheme(val?: string) {
     }
     const localTHeme = localStorage.getItem("theme")
     const preferDark = window.matchMedia("(prefers-color-scheme: dark)");
-    console.log("localTheme", localTHeme)
-    console.log("prefer", preferDark)
     if(localTHeme === null) {
         if (preferDark.matches) {
             html.classList.add("dark")

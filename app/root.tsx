@@ -23,8 +23,9 @@ import {redirect, useLoaderData} from "react-router";
 import {validateSession} from "~/services/api/auth/validateSession";
 import NotFound from "~/components/misc/404";
 import {Button} from "~/components/ui/button";
-import {MoonIcon, SunIcon} from "lucide-react";
+import {SunIcon} from "lucide-react";
 import switchTheme from "~/services/utils/themeSwitcher";
+import * as process from "process";
 
 export const links: LinksFunction = () => [
     {rel: "stylesheet", href: styles},
@@ -44,15 +45,21 @@ export const loader = async ({request}) => {
         if (!url.pathname.split("/").includes("auth")) {
             return redirect('/auth')
         } else {
-            return {
-                auth: "false"
-            }
+            return json({
+                auth: "false",
+                ENV: {
+                    API_DOMAIN: process.env.API_DOMAIN
+                }
+            })
         }
     }
     const validateSessionResp = await validateSession({session: session.get("X-Session"), auth})
     if (validateSessionResp) {
         return json({
-            auth: "true"
+            auth: "true",
+            ENV: {
+                API_DOMAIN: process.env.API_DOMAIN
+            }
         })
     } else {
         session.unset("X-Auth");
@@ -75,6 +82,7 @@ export default function App() {
     const loaderData = useLoaderData();
     // @ts-ignore
     const [isAuth] = useState(loaderData.auth === "true");
+    // @ts-ignore
     return (
         <html lang="en" className="dark" id="html">
         <head>
@@ -108,7 +116,14 @@ export default function App() {
         <Toaster/>
         <CommandPallet/>
         <ScrollRestoration/>
-        <Scripts/>
+        <script
+            dangerouslySetInnerHTML={{
+                __html: `window.ENV = ${JSON.stringify(
+                    loaderData?.ENV ?? {}
+                )}`,
+            }}
+        />
+        <Scripts />
         <LiveReload/>
         </body>
         </html>

@@ -2,7 +2,7 @@ import {DragDropContext, Draggable, Droppable, resetServerContext} from "react-b
 import {useListState} from "@mantine/hooks";
 import {GripVerticalIcon, Trash2Icon, BadgePlusIcon, PackagePlusIcon} from "lucide-react"
 import {Pencil2Icon, ImageIcon} from "@radix-ui/react-icons"
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "~/components/ui/tooltip";
 import {Button} from "~/components/ui/button";
 import {Label} from "~/components/ui/label";
@@ -18,9 +18,15 @@ import {
     DialogTrigger,
 } from "~/components/ui/dialog"
 import CreatePageLink from "~/services/api/page/createLink";
+import updateSequence from "~/services/api/page/updateSequence";
 
 export default function PageLinks({links, revalidator}) {
     const [state, handlers] = useListState(links ?? []);
+    useEffect(() => {
+        if(JSON.stringify(links) !== JSON.stringify(state)) {
+            updateSequence(state)
+        }
+    }, [links, state]);
     resetServerContext();
 
     function PageLink({link, index}) {
@@ -34,25 +40,30 @@ export default function PageLinks({links, revalidator}) {
                 >
                     <div className="flex items-center p-2 rounded-xl shadow-2xl border-2 bg-black">
                         <div
-                            { ...provided.dragHandleProps }
+                            {...provided.dragHandleProps}
                             className="mr-2"
                         >
-                            <GripVerticalIcon />
+                            <GripVerticalIcon/>
                         </div>
                         <article className="flex justify-between items-center w-full">
                             <div>
                                 <h3 className={`text-xl font-bold ${edit ? "border" : ""}`}
                                     contentEditable={edit}
-                                    onBlur={({currentTarget}) => handlers.setItem(index, {...link, Name: currentTarget.innerText})}
+                                    onBlur={({currentTarget}) => handlers.setItem(index, {
+                                        ...link,
+                                        Name: currentTarget.innerText
+                                    })}
                                 >
                                     {link.Name}
                                 </h3>
-                                <span className="text-sm text-gray-600">Goes to: <code className={`${edit ? "border" : ""}`} contentEditable={edit}>{link.Link}</code></span>
+                                <span className="text-sm text-gray-600">Goes to: <code
+                                    className={`${edit ? "border" : ""}`}
+                                    contentEditable={edit}>{link.Link}</code></span>
                             </div>
                             <div className="font-light flex space-x-4 mr-4">
-                                <Pencil2Icon onClick={() => setEdit(!edit)} className="w-4 h-4 hover:text-primary" />
-                                <ImageIcon className="w-4 h-4 hover:text-primary" />
-                                <Trash2Icon className="w-4 h-4 hover:text-destructive" />
+                                <Pencil2Icon onClick={() => setEdit(!edit)} className="w-4 h-4 hover:text-primary"/>
+                                <ImageIcon className="w-4 h-4 hover:text-primary"/>
+                                <Trash2Icon className="w-4 h-4 hover:text-destructive"/>
                             </div>
                         </article>
                     </div>
@@ -60,11 +71,11 @@ export default function PageLinks({links, revalidator}) {
             )}
         </Draggable>
     }
+
     return <>
         <div className="links-list">
             <DragDropContext
-                onDragEnd={({ destination, source }) =>
-                    handlers.reorder({
+                onDragEnd={async ({destination, source}) => handlers.reorder({
                         from: source.index,
                         to: destination?.index || 0,
                     })
@@ -73,19 +84,20 @@ export default function PageLinks({links, revalidator}) {
                 <Droppable droppableId="dnd-list" direction="vertical">
                     {(provided1) => (
                         <div {...provided1.droppableProps} ref={provided1.innerRef}>
-                            {state.map((val, index) => <PageLink key={index} link={val} index={index} />)}
+                            {state.map((val, index) => <PageLink key={index} link={val} index={index}/>)}
                             {provided1.placeholder}
                         </div>
                     )}
                 </Droppable>
             </DragDropContext>
             <div className="flex w-full space-x-4 justify-between">
-                <CreateLink revalidator={revalidator} sequence={links.length} />
+                <CreateLink revalidator={revalidator} sequence={links.length}/>
                 <TooltipProvider>
                     <Tooltip>
                         <TooltipTrigger asChild>
-                            <div className="w-full cursor-pointer border-dashed border-2 p-4 rounded-xl flex justify-center items-center">
-                                <PackagePlusIcon className="w-4 h-4 mr-2" />Add Widgets
+                            <div
+                                className="w-full cursor-pointer border-dashed border-2 p-4 rounded-xl flex justify-center items-center">
+                                <PackagePlusIcon className="w-4 h-4 mr-2"/>Add Widgets
                             </div>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -114,8 +126,9 @@ export function CreateLink({sequence, revalidator}) {
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <div className="w-full cursor-pointer border-dashed border-2 p-4 rounded-xl flex justify-center items-center">
-                    <BadgePlusIcon className="w-4 h-4 mr-2" />Add Link
+                <div
+                    className="w-full cursor-pointer border-dashed border-2 p-4 rounded-xl flex justify-center items-center">
+                    <BadgePlusIcon className="w-4 h-4 mr-2"/>Add Link
                 </div>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">

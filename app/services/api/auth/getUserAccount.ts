@@ -1,4 +1,5 @@
 import {getSession} from "~/session";
+import * as process from "process";
 
 export type GetUserAccountInput = {
     auth: string;
@@ -16,7 +17,7 @@ export const getUserAccount = async ({auth, session}: GetUserAccountInput): Prom
         headers: myHeaders,
     };
     const resp = await fetch(
-        `http://localhost:8080/user/userAccount`,
+        process.env.API_DOMAIN + `/user/userAccount`,
         requestOptions,
     );
     const data = await resp.json();

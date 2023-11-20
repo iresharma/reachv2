@@ -27,7 +27,7 @@ export default async function addComment({session, message, item}: input) {
     };
 
     const resp = await fetch(
-        "http://localhost:8080/kanban/comment?item_id=" + item,
+        window.ENV.API_DOMAIN + "/kanban/comment?item_id=" + item,
         requestOptions
     );
     const data = await resp.json()
