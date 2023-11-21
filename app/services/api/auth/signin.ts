@@ -20,11 +20,13 @@ export type SignInResp = {
 export type SignInInput = {
     email: string;
     password: string;
+    signup?: boolean
 };
 
 export const signIn = async ({
                                  email,
                                  password,
+                                 signup,
                              }: SignInInput): Promise<SignInError | SignInResp> => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -56,13 +58,14 @@ export const signIn = async ({
     session.set("X-Session", data["session"]);
     session.set("X-Auth", data["auth"]);
     session.set("X-Perm", data["perm"]);
+    if (signup) {
+        return { session }
+    }
     const {Id, Name, BoardId, BucketId, PageId} = await getUserAccount({auth: data["auth"], session: data["session"]});
     session.set("X-UserAccount", Id);
     session.set("X-UserAccount-Name", Name);
     session.set("X-Board", BoardId);
     session.set("X-Bucket", BucketId);
     session.set("X-Page", PageId);
-    return {
-        session: session
-    }
+    return { session }
 };

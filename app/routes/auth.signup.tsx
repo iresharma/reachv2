@@ -14,7 +14,7 @@ export const action = async ({ request }: ActionArgs) => {
     if (resp !== 201) {
         return redirect("/auth")
     }
-    const respSignIn = await signIn({email: email.toString(), password: password.toString()});
+    const respSignIn = await signIn({email: email.toString(), password: password.toString(), signup: true});
     return redirect("/auth/useraccount", {
         headers: {
             "Set-Cookie": await commitSession(respSignIn.session)
