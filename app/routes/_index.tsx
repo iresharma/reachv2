@@ -15,6 +15,7 @@ export const meta: V2_MetaFunction = () => {
 
 export const loader = async ({request}: LoaderArgs) => {
   const session = await getSession(request.headers.get("Cookie"));
+  console.log(session.data)
   return json({
     session: session
   })
@@ -24,10 +25,10 @@ export default function DashboardPage() {
   // @ts-ignore
   const {session} = useLoaderData();
   useEffect(() => {
-    Object.keys(session.data).map((val) => {
+    Object.keys(session.data).forEach((val) => {
       secureLocalStorage.setItem(val, session.data[val]);
     })
-  })
+  }, [])
   return (
       <>
         <div className="flex-col flex">

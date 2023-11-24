@@ -36,7 +36,7 @@ export function DataTableViewOptions() {
                     style={{width: "65vw"}}
                     onPointerDownOutside={() => openSheet(false)}
                 >
-                    <KanbanSheet item={emptyData}/>
+                    <KanbanSheet item={emptyData} createItem={true} />
                 </SheetContent>
             </Sheet>
         </>

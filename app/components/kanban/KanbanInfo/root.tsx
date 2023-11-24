@@ -52,11 +52,11 @@ export type Item = {
     Comments?: Comment[];
 }
 
-export default function KanbanSheet({item}: { item: Item }) {
+export default function KanbanSheet({item, createItem}: { item: Item, createItem?: boolean }) {
     const [stateItem, setStateItem] = useState(item);
     const clipboard = useClipboard({ timeout: 500 });
     const copy = () => {
-        clipboard.copy(`localhost:3000/kanban?id=${item.Id}`)
+        clipboard.copy(window.ENV.API_DOMAIN + `/kanban?id=${item.Id}`)
         toast({
             title: "Copied !"
         })
@@ -76,7 +76,7 @@ export default function KanbanSheet({item}: { item: Item }) {
                 if(out) revalidator.revalidate()
             }
         };
-        update();
+        if(createItem) update();
     }, [stateItem]);
     const status_mapping = (val: number) => {
         switch (val) {
@@ -156,10 +156,13 @@ export default function KanbanSheet({item}: { item: Item }) {
                 <div className="h-[80vh] overflow-y-scroll">
                     <Tiptap content={stateItem.Desc}
                             onChange={(content) => setStateItem({...stateItem, Desc: content})}/>
-                    <h3 className="text-xl mt-8 mb-4">Comments</h3>
-                    {stateItem.Comments?.map((val, index) => <CommentDisplay message={JSON.parse(val.Message)} key={index}/>)}
-                    <CommentBox item_id={stateItem.Id} addCommentToState={addCommentToState}/>
-                    <div className="h-[10vh]"/>
+                    { !createItem && <>
+                        <h3 className="text-xl mt-8 mb-4">Comments</h3>
+                        {stateItem.Comments?.map((val, index) => <CommentDisplay message={JSON.parse(val.Message)} key={index}/>)}
+                        <CommentBox item_id={stateItem.Id} addCommentToState={addCommentToState}/>
+                        <div className="h-[10vh]"/>
+                    </> }
+                    { createItem && <Button className="mt-4">Create Issue</Button> }
                 </div>
                 <div className="ml-4">
                     <Table className="mt-2">
