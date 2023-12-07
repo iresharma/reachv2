@@ -55,7 +55,7 @@ export function DataTableToolbar<TData>({
           </Button>
         )}
       </div>
-      <DataTableViewOptions />
+      <DataTableViewOptions labels={labels} />
     </div>
   );
 }

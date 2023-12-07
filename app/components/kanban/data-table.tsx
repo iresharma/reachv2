@@ -55,7 +55,6 @@ export function DataTable<TData, TValue>({
   const [item, setItem] = React.useState({});
   useEffect(() => {
     if (activeItem !== null) {
-      console.log("lol")
       setItem(activeItem);
       openSheet(true);
     }
@@ -152,7 +151,7 @@ export function DataTable<TData, TValue>({
             openSheet(false)
           }}
         >
-          <KanbanSheet item={item} />
+          <KanbanSheet item={item} labels={labels} />
         </SheetContent>
       </Sheet>
     </div>

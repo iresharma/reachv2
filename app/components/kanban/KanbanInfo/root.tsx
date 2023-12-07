@@ -31,6 +31,7 @@ import {useRevalidator} from "@remix-run/react";
 import {secureLocalStorage} from "~/services/utils/secureLocalstorage";
 import {useClipboard} from "@mantine/hooks";
 import {toast} from "~/components/ui/use-toast";
+import {createItem} from "~/services/api/kanban/createItem";
 
 export type Comment = {
     Id: string;
@@ -52,8 +53,20 @@ export type Item = {
     Comments?: Comment[];
 }
 
-export default function KanbanSheet({item, createItem}: { item: Item, createItem?: boolean }) {
+export default function KanbanSheet({item, createItemProp, labels}: { item: Item; createItemProp?: boolean; labels: any[] }) {
     const [stateItem, setStateItem] = useState(item);
+    useEffect(() => {
+        if(createItemProp) {
+            setStateItem({...stateItem, Label: labels[0]})
+            createItem({
+                UserAccount: secureLocalStorage.getItem("X-UserAccount")!,
+                Session: secureLocalStorage.getItem("X-Session")!,
+                Auth: secureLocalStorage.getItem("X-Auth")!,
+                Board: secureLocalStorage.getItem("X-Board")!,
+                label: labels[0].Id ?? ''
+            }).then(id => setStateItem({...stateItem, Id:id}))
+        }
+    }, []);
     const clipboard = useClipboard({ timeout: 500 });
     const copy = () => {
         clipboard.copy(window.ENV.API_DOMAIN + `/kanban?id=${item.Id}`)
@@ -76,7 +89,7 @@ export default function KanbanSheet({item, createItem}: { item: Item, createItem
                 if(out) revalidator.revalidate()
             }
         };
-        if(createItem) update();
+        if(createItemProp) update();
     }, [stateItem]);
     const status_mapping = (val: number) => {
         switch (val) {
@@ -156,27 +169,48 @@ export default function KanbanSheet({item, createItem}: { item: Item, createItem
                 <div className="h-[80vh] overflow-y-scroll">
                     <Tiptap content={stateItem.Desc}
                             onChange={(content) => setStateItem({...stateItem, Desc: content})}/>
-                    { !createItem && <>
+                    { !createItemProp && <>
                         <h3 className="text-xl mt-8 mb-4">Comments</h3>
                         {stateItem.Comments?.map((val, index) => <CommentDisplay message={JSON.parse(val.Message)} key={index}/>)}
                         <CommentBox item_id={stateItem.Id} addCommentToState={addCommentToState}/>
                         <div className="h-[10vh]"/>
                     </> }
-                    { createItem && <Button className="mt-4">Create Issue</Button> }
                 </div>
                 <div className="ml-4">
                     <Table className="mt-2">
                         <TableBody>
-                            <TableRow className="border-0">
-                                <TableCell className="p-2 font-bold ">Label</TableCell>
-                                <TableCell className="p-2 w-8/12">
-                                    <Badge
-                                        variant="outline"
-                                        style={{backgroundColor: `#${item.Label.Color}`}}
-                                    >
-                                        {stateItem.Label.Name}
-                                    </Badge>
-                                </TableCell>
+                            <TableRow>
+                                    <TableCell className="p-2 font-bold ">Label</TableCell>
+                                    <TableCell className="p-2 font-bold ">
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Badge
+                                                    variant="outline"
+                                                    style={{backgroundColor: `#${stateItem.Label.Color}`}}
+                                                >
+                                                    {stateItem.Label.Name}
+                                                </Badge>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent className="w-56">
+                                                <DropdownMenuLabel>Label</DropdownMenuLabel>
+                                                <DropdownMenuSeparator/>
+                                                <DropdownMenuGroup>
+                                                    {labels.map(label => <DropdownMenuItem key={label.Id}
+                                                                                           onClick={() => setStateItem({
+                                                                                               ...stateItem,
+                                                                                               Label: label
+                                                                                           })}>
+                                                        <Badge
+                                                            variant="outline"
+                                                            style={{backgroundColor: `#${label.Color}`}}
+                                                        >
+                                                            {label.Name}
+                                                        </Badge>
+                                                    </DropdownMenuItem>)}
+                                                </DropdownMenuGroup>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </TableCell>
                             </TableRow>
                             {stateItem.Links !== "" && Object.keys(JSON.parse(stateItem.Links)).map((val, index) => (
                                 <TableRow className="border-0" key={index}>
