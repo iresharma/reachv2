@@ -15,7 +15,7 @@ export const action = async ({ request }: ActionArgs) => {
         return redirect("/auth")
     }
     const respSignIn = await signIn({email: email.toString(), password: password.toString(), signup: true});
-    return redirect("/auth/useraccount", {
+    return redirect("/auth/userInfo", {
         headers: {
             "Set-Cookie": await commitSession(respSignIn.session)
         }

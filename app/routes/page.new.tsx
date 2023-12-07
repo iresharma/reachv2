@@ -3,7 +3,6 @@ import PageCover from "~/assets/page-cover.png";
 import {ActionArgs, LoaderArgs, V2_MetaFunction} from "@remix-run/node";
 import {commitSession, getSession} from "~/session";
 import {redirect} from "react-router";
-import {createKanban} from "~/services/api/kanban/createKanban";
 import CreatePage from "~/services/api/page/createPage";
 import {ChromeIcon} from "lucide-react";
 

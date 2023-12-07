@@ -11,7 +11,7 @@ import {
     Scripts,
     ScrollRestoration, useRouteError,
 } from "@remix-run/react";
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {MainNav} from "~/components/misc/main-nav";
 import {UserNav} from "~/components/misc/user-nav";
 import {Input} from "~/components/ui/input";
@@ -19,7 +19,7 @@ import {Toaster} from "~/components/ui/toaster";
 import {CommandPallet} from "~/components/misc/command-pallet";
 import {commitSession, getSession} from "~/session";
 import {json} from "@remix-run/node";
-import {redirect, useLoaderData} from "react-router";
+import {redirect, useLoaderData, useMatches} from "react-router";
 import {validateSession} from "~/services/api/auth/validateSession";
 import NotFound from "~/components/misc/404";
 import {Button} from "~/components/ui/button";
@@ -80,8 +80,13 @@ export default function App() {
         switchTheme();
     }, []);
     const loaderData = useLoaderData();
+    const routes = useMatches();
     // @ts-ignore
-    const [isAuth] = useState(loaderData.auth === "true");
+    const isAuth = () => {
+        // @ts-ignore
+        const data = routes.at(-1).pathname
+        return !data.includes("auth")
+    }
     // @ts-ignore
     return (
         <html lang="en" className="dark" id="html">
@@ -92,7 +97,7 @@ export default function App() {
             <Links/>
         </head>
         <body>
-        {isAuth && (
+        {isAuth() && (
             <div className="border-b sticky top-0 dark:bg-slate-900 bg-zinc-300 z-10">
                 <div className="flex h-16 items-center px-4">
                     <MainNav className="mx-6"/>
