@@ -15,7 +15,7 @@ export const meta: V2_MetaFunction = () => {
 
 export const loader = async ({request}: LoaderArgs) => {
     const session = await getSession(request.headers.get("Cookie"));
-    if (session.has("X-Page")) {
+    if (session.has("X-Page") && session.get("X-Page") !== "") {
         return redirect("/page")
     }
     return null

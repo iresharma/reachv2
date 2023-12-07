@@ -14,7 +14,7 @@ export const meta: V2_MetaFunction = () => {
 
 export const loader = async ({ request }: LoaderArgs) => {
     const session = await getSession(request.headers.get("Cookie"));
-    if(session.has("X-Board")) {
+    if(session.has("X-Board") && session.get("X-Board") !== "") {
         return redirect("/kanban")
     }
     return null
