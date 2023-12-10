@@ -30,6 +30,7 @@ import { Sheet, SheetContent } from "~/components/ui/sheet";
 import KanbanSheet from "~/components/kanban/KanbanInfo/root";
 import type {Item} from "~/components/kanban/data/schema";
 import {useEffect} from "react";
+import { Button } from "~/components/ui/button";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -134,7 +135,8 @@ export function DataTable<TData, TValue>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  {labels.length === 0 && "Start by creating a label."}
+                  {labels.length !== 0 && "No Items to act on."}
                 </TableCell>
               </TableRow>
             )}

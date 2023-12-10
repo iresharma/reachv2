@@ -53,20 +53,8 @@ export type Item = {
     Comments?: Comment[];
 }
 
-export default function KanbanSheet({item, createItemProp, labels}: { item: Item; createItemProp?: boolean; labels: any[] }) {
+export default function KanbanSheet({item, labels}: { item: Item; labels: any[] }) {
     const [stateItem, setStateItem] = useState(item);
-    useEffect(() => {
-        if(createItemProp) {
-            setStateItem({...stateItem, Label: labels[0]})
-            createItem({
-                UserAccount: secureLocalStorage.getItem("X-UserAccount")!,
-                Session: secureLocalStorage.getItem("X-Session")!,
-                Auth: secureLocalStorage.getItem("X-Auth")!,
-                Board: secureLocalStorage.getItem("X-Board")!,
-                label: labels[0].Id ?? ''
-            }).then(id => setStateItem({...stateItem, Id:id}))
-        }
-    }, []);
     const clipboard = useClipboard({ timeout: 500 });
     const copy = () => {
         clipboard.copy(window.ENV.API_DOMAIN + `/kanban?id=${item.Id}`)
@@ -89,8 +77,8 @@ export default function KanbanSheet({item, createItemProp, labels}: { item: Item
                 if(out) revalidator.revalidate()
             }
         };
-        if(createItemProp) update();
-    }, [stateItem]);
+        update();
+    }, [item, revalidator, stateItem]);
     const status_mapping = (val: number) => {
         switch (val) {
             case 0:
@@ -169,12 +157,10 @@ export default function KanbanSheet({item, createItemProp, labels}: { item: Item
                 <div className="h-[80vh] overflow-y-scroll">
                     <Tiptap content={stateItem.Desc}
                             onChange={(content) => setStateItem({...stateItem, Desc: content})}/>
-                    { !createItemProp && <>
                         <h3 className="text-xl mt-8 mb-4">Comments</h3>
                         {stateItem.Comments?.map((val, index) => <CommentDisplay message={JSON.parse(val.Message)} key={index}/>)}
                         <CommentBox item_id={stateItem.Id} addCommentToState={addCommentToState}/>
                         <div className="h-[10vh]"/>
-                    </> }
                 </div>
                 <div className="ml-4">
                     <Table className="mt-2">

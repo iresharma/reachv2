@@ -32,7 +32,10 @@ export const links: LinksFunction = () => [
     {rel: "stylesheet", href: loaderStyles},
     {rel: "preconnect", href: "https://fonts.googleapis.com"},
     {rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous"},
-    {rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Outfit:wght@100;400;600&family=Pixelify+Sans&display=swap"},
+    {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Outfit:wght@100;400;600&family=Pixelify+Sans&display=swap"
+    },
     ...(cssBundleHref ? [{rel: "stylesheet", href: cssBundleHref}] : []),
 ];
 
@@ -40,6 +43,7 @@ export const links: LinksFunction = () => [
 export const loader = async ({request}) => {
     const session = await getSession(request.headers.get("Cookie"));
     const auth = session.get("X-Auth")
+    const userAccount = session.get("X-UserAccount")
     const url = new URL(request.url);
     if (typeof auth === "undefined") {
         if (!url.pathname.split("/").includes("auth")) {
@@ -51,6 +55,10 @@ export const loader = async ({request}) => {
                     API_DOMAIN: process.env.API_DOMAIN
                 }
             })
+        }
+    } else if (typeof userAccount === "undefined") {
+        if (!url.pathname.split("/").includes("auth")) {
+            return redirect("/auth/useraccount")
         }
     }
     const validateSessionResp = await validateSession({session: session.get("X-Session"), auth})
@@ -65,7 +73,7 @@ export const loader = async ({request}) => {
         session.unset("X-Auth");
         session.unset("X-Session");
         session.unset("X-UserAccount");
-        session.unset("X-Kanban");
+        session.unset("X-Board");
         session.unset("X-Perm");
         return redirect("/auth", {
             headers: {
@@ -107,7 +115,8 @@ export default function App() {
                             placeholder="Search..."
                             className="md:w-[100px] lg:w-[300px]"
                         />
-                        <Button variant="outline" onClick={() => switchTheme(localStorage.getItem("theme") ?? "dark")} size="icon">
+                        <Button variant="outline" onClick={() => switchTheme(localStorage.getItem("theme") ?? "dark")}
+                                size="icon">
                             <SunIcon className="w-4 h-4"/>
                         </Button>
                         <UserNav/>
@@ -128,7 +137,7 @@ export default function App() {
                 )}`,
             }}
         />
-        <Scripts />
+        <Scripts/>
         <LiveReload/>
         </body>
         </html>
