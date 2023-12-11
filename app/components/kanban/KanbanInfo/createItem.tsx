@@ -25,8 +25,45 @@ import {
 import Tiptap from "~/components/misc/tiptap";
 import "~/styles/kanban/create.css"
 import {Badge} from "~/components/ui/badge";
+import {useState} from "react";
+import {
+    Select,
+    SelectContent,
+    SelectGroup,
+    SelectItem,
+    SelectLabel,
+    SelectTrigger,
+    SelectValue
+} from "~/components/ui/select";
+import {createItem} from "~/services/api/kanban/createItem";
+import {secureLocalStorage} from "~/services/utils/secureLocalstorage";
+import {useRevalidator} from "@remix-run/react";
 
 export default function CreateItem({ open, close, labels }: { open: boolean; close: () => void; labels: any[] }) {
+
+    const revalidator = useRevalidator();
+
+    const [item, setItem] = useState({
+        Title: "",
+        Status: "0",
+        Desc: "",
+        Links: '{"hello":"hi"}',
+        Label: labels[0],
+    });
+
+    const submit = async () => {
+        await createItem({
+            session: {
+                UserAccount: secureLocalStorage.getItem("X-UserAccount"),
+                Session: secureLocalStorage.getItem("X-Session"),
+                Auth: secureLocalStorage.getItem("X-Auth"),
+                Board: secureLocalStorage.getItem("X-Board"),
+            },
+            data: {...item, Label: item.Label.Id}
+        })
+        close()
+        revalidator.revalidate()
+    }
 
     const textAreaHeight = (e: any) => {
         e.target.style.height = "inherit";
@@ -66,6 +103,7 @@ export default function CreateItem({ open, close, labels }: { open: boolean; clo
                         onKeyDown={textAreaHeight}
                         className="resize-none border-none h-[1rem] text-2xl font-bold p-0 m-0 focus-visible:ring-0"
                         placeholder="Create a title"
+                        onChange={(e) => setItem({ ...item, Title: e.target.value })}
                     />
                     <div className="grid items-center gap-2" style={{ gridTemplateColumns: "1fr 1fr" }}>
                         <div className="flex items-center">
@@ -74,13 +112,13 @@ export default function CreateItem({ open, close, labels }: { open: boolean; clo
                             </Label>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    {status_mapping(0)}
+                                    {status_mapping(Number(item.Status))}
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-56">
                                     <DropdownMenuLabel>Status</DropdownMenuLabel>
                                     <DropdownMenuSeparator/>
                                     <DropdownMenuGroup>
-                                        {[0, 1, 2, 3, 4].map(status => <DropdownMenuItem key={status} >
+                                        {[0, 1, 2, 3, 4].map(status => <DropdownMenuItem onClick={() => setItem({...item, Status: status.toString()})} key={status} >
                                             {status_mapping(status)}
                                         </DropdownMenuItem>)}
                                     </DropdownMenuGroup>
@@ -94,17 +132,17 @@ export default function CreateItem({ open, close, labels }: { open: boolean; clo
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                     <span
-                                        style={{backgroundColor: `#${labels[0].Color}`}}
+                                        style={{backgroundColor: `#${item.Label.Color}`}}
                                         className="rounded-2xl py-1 px-4 text-xs"
                                     >
-                                        {labels[0].Name}
+                                        {item.Label.Name}
                                     </span>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent className="w-56">
                                     <DropdownMenuLabel>Label</DropdownMenuLabel>
                                     <DropdownMenuSeparator/>
                                     <DropdownMenuGroup>
-                                        {labels.map(label => <DropdownMenuItem key={label.Id}>
+                                        {labels.map(label => <DropdownMenuItem key={label.Id} onClick={() => setItem({ ...item, Label: label })}>
                                             <Badge
                                                 variant="outline"
                                                 style={{backgroundColor: `#${label.Color}`}}
@@ -121,9 +159,9 @@ export default function CreateItem({ open, close, labels }: { open: boolean; clo
                 <pre className="text-foreground dark:text-muted-foreground">
                     Add links feature.
                 </pre>
-                <Tiptap content={""} />
+                <Tiptap content={""} onChange={(e) => setItem({ ...item, Desc: e })} />
                 <DialogFooter>
-                    <Button type="submit" onClick={close}>Save changes</Button>
+                    <Button variant="outline" className="mr-6" onClick={submit}>Save changes</Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>

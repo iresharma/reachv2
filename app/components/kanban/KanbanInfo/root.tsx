@@ -78,7 +78,7 @@ export default function KanbanSheet({item, labels}: { item: Item; labels: any[] 
             }
         };
         update();
-    }, [item, revalidator, stateItem]);
+    }, [stateItem]);
     const status_mapping = (val: number) => {
         switch (val) {
             case 0:
