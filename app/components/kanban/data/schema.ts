@@ -11,12 +11,12 @@ export const taskSchema = z.object({
   Title: z.string(),
   Status: z.number(),
   Desc: z.string(),
+  Links: z.string(),
   Label: z.object({
     Id: z.string(),
     Name: z.string(),
     Color: z.string(),
   }),
-  Links: z.string(),
   Comments: z.array(commentSchema).optional()
 });
 

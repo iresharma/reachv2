@@ -45,6 +45,7 @@ export const loader = async ({request}: LoaderArgs) => {
     }
     return {
         items: z.array(taskSchema).parse(kanbanData.items),
+        id: session.get("X-Board"),
         labels: kanbanData.labels,
         item: kanbanItem
     };
@@ -58,11 +59,18 @@ export default function TaskPage() {
     // @ts-ignore
     const labels = loaderData.labels.map(item => ({value: item.Name, ...item}));
     useEffect(() => {
+        console.log(loaderData)
         // @ts-ignore
         if(loaderData.item !== null)  {
             // @ts-ignore
             setActiveItem(loaderData.item);
         }
+        // @ts-ignore
+        if (loaderData.id !== null) {
+            // @ts-ignore
+            localStorage.setItem("X-Board", loaderData.id)
+        }
+
     }, []);
     const download = async () => {
         const downloadLink = await downloadReport({

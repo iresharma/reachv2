@@ -1,8 +1,6 @@
 import {PlusCircledIcon} from "@radix-ui/react-icons";
 
 import {Button} from "~/components/ui/button";
-import {Sheet, SheetContent} from "~/components/ui/sheet";
-import KanbanSheet from "~/components/kanban/KanbanInfo/root";
 import * as React from "react";
 import {CreateLabel} from "~/components/kanban/createLabel";
 import {
@@ -11,28 +9,17 @@ import {
     AlertDialogHeader,
     AlertDialogTitle
 } from "~/components/ui/alert-dialog";
-
-const emptyData = {
-    Title: "",
-    Status: 0,
-    Id: "",
-    Desc: "",
-    Label: {
-        Color: "",
-        Name: ""
-    },
-    Links: "{}"
-}
+import CreateItem from "~/components/kanban/KanbanInfo/createItem";
 
 export function DataTableViewOptions({ labels }: { labels: any; }) {
-    const [sheet, setSheet] = React.useState(false);
-    const [alert, setAlert] = React.useState(false);
+    const [createItemDialog, setCreateItemDialog] = React.useState(false);
+    const [infoDialog, setInfoDialog] = React.useState(false);
     const addNew = () => {
         if(labels.length === 0) {
-            setAlert(true);
+            setInfoDialog(true);
         }
         else {
-            setSheet(true);
+            setCreateItemDialog(true);
         }
     }
     return (
@@ -42,16 +29,8 @@ export function DataTableViewOptions({ labels }: { labels: any; }) {
                 <PlusCircledIcon className="mr-2 h-4 w-4 text-black"/>
                 Add New
             </Button>
-            <Sheet open={sheet}>
-                <SheetContent
-                    className="p-0"
-                    style={{width: "65vw"}}
-                    onPointerDownOutside={() => setSheet(false)}
-                >
-                    <KanbanSheet item={emptyData} createItemProp={true} labels={labels} />
-                </SheetContent>
-            </Sheet>
-            <AlertDialog open={alert}>
+            { labels.length > 0 && <CreateItem open={createItemDialog} close={() => setCreateItemDialog(false)} labels={labels}/>}
+            <AlertDialog open={infoDialog}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Can not proceed!</AlertDialogTitle>
@@ -60,7 +39,7 @@ export function DataTableViewOptions({ labels }: { labels: any; }) {
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel onClick={() => setAlert(false)}>OK</AlertDialogCancel>
+                        <AlertDialogCancel onClick={() => setInfoDialog(false)}>OK</AlertDialogCancel>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>

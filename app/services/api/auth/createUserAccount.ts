@@ -22,10 +22,10 @@ export const createUserAccount = async ({ name, session, auth }: any): Promise<C
         process.env.API_DOMAIN + `/userAccount`,
         requestOptions,
     );
-    console.log()
     const data = await resp.json()
+    console.log(data)
     return {
-        id: data.Id,
-        name: data.AccountName
+        id: data.user.Id,
+        name: data.user.AccountName
     }
 }

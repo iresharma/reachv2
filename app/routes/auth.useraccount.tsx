@@ -33,6 +33,7 @@ export const action = async ({request}: ActionArgs) => {
         session: session.get("X-Session"),
         auth: session.get("X-Auth")
     })
+    console.log(createUserAccountResp)
     session.set("X-UserAccount", createUserAccountResp.id)
     session.set("X-UserAccountName", createUserAccountResp.name)
     return redirect("/", {
