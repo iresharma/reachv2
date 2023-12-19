@@ -23,7 +23,6 @@ import {emailExists} from "~/services/api/auth/emailexists";
 import Loader from "~/components/misc/loader";
 
 export function AuthTabs() {
-    const submitRegister = useSubmit();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [emailVerify, setVerifyState] = useState<"LOADING" | "EXISTS" | "OK" | null>(null);

@@ -19,11 +19,13 @@ import {
 } from "~/components/ui/dialog"
 import CreatePageLink from "~/services/api/page/createLink";
 import updateSequence from "~/services/api/page/updateSequence";
+import {Popover, PopoverContent, PopoverTrigger} from "~/components/ui/popover";
+import {DialogClose} from "@radix-ui/react-dialog";
 
 export default function PageLinks({links, revalidator}) {
     const [state, handlers] = useListState(links ?? []);
     useEffect(() => {
-        if(JSON.stringify(links) !== JSON.stringify(state)) {
+        if (JSON.stringify(links) !== JSON.stringify(state)) {
             updateSequence(state)
         }
     }, [links, state]);
@@ -47,7 +49,7 @@ export default function PageLinks({links, revalidator}) {
                         </div>
                         <article className="flex justify-between items-center w-full">
                             <div>
-                                <h3 className={`text-xl font-bold ${edit ? "border" : ""}`}
+                                <h3 className={`text-xl font-bold ${edit ? "border border-primary ring-offset-2 ring-2" : ""}`}
                                     contentEditable={edit}
                                     onBlur={({currentTarget}) => handlers.setItem(index, {
                                         ...link,
@@ -57,13 +59,35 @@ export default function PageLinks({links, revalidator}) {
                                     {link.Name}
                                 </h3>
                                 <span className="text-sm text-gray-600">Goes to: <code
-                                    className={`${edit ? "border" : ""}`}
-                                    contentEditable={edit}>{link.Link}</code></span>
+                                    className={`${edit ? "border border-primary ring-offset-2 ring-2" : ""}`}
+                                    contentEditable={edit}
+                                    onBlur={({currentTarget}) => handlers.setItem(index, {
+                                        ...link,
+                                        Link: currentTarget.innerText
+                                    })}>{link.Link}</code></span>
                             </div>
                             <div className="font-light flex space-x-4 mr-4">
                                 <Pencil2Icon onClick={() => setEdit(!edit)} className="w-4 h-4 hover:text-primary"/>
                                 <ImageIcon className="w-4 h-4 hover:text-primary"/>
-                                <Trash2Icon className="w-4 h-4 hover:text-destructive"/>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Trash2Icon className="w-4 h-4 hover:text-destructive"/>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-80">
+                                        <div className="grid gap-4">
+                                            <div className="space-y-2">
+                                                <h4 className="font-medium leading-none">Delete forever</h4>
+                                                <p className="text-sm text-muted-foreground">
+                                                    Are you sure you want to delete this link ?
+                                                </p>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <Button variant="secondary">Cancel</Button>
+                                                <Button variant="destructive">Delete</Button>
+                                            </div>
+                                        </div>
+                                    </PopoverContent>
+                                </Popover>
                             </div>
                         </article>
                     </div>
@@ -76,9 +100,9 @@ export default function PageLinks({links, revalidator}) {
         <div className="links-list">
             <DragDropContext
                 onDragEnd={async ({destination, source}) => handlers.reorder({
-                        from: source.index,
-                        to: destination?.index || 0,
-                    })
+                    from: source.index,
+                    to: destination?.index || 0,
+                })
                 }
             >
                 <Droppable droppableId="dnd-list" direction="vertical">
@@ -162,7 +186,9 @@ export function CreateLink({sequence, revalidator}) {
                     </div>
                 </div>
                 <DialogFooter>
-                    <Button onClick={createLink}>Save changes</Button>
+                    <DialogClose asChild>
+                        <Button onClick={createLink}>Save changes</Button>
+                    </DialogClose>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
