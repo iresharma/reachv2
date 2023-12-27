@@ -54,7 +54,7 @@ export function MainNav({
         Page
       </a>
       <a
-        href="/examples/dashboard"
+        href="/mail"
         className="text-sm flex items-center font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         <Mail className="w-4 h-4 mr-2" />
