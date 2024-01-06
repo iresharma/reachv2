@@ -30,7 +30,7 @@ import updateItem from "~/services/api/kanban/updateItem";
 import {useRevalidator} from "@remix-run/react";
 import {secureLocalStorage} from "~/services/utils/secureLocalstorage";
 import {useClipboard} from "@mantine/hooks";
-import {toast} from "~/components/ui/use-toast";
+import {toast} from "sonner";
 import {createItem} from "~/services/api/kanban/createItem";
 
 export type Comment = {

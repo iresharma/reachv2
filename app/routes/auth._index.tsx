@@ -1,9 +1,8 @@
 import { AuthTabs } from "~/components/auth/tabs";
 import Background from "~/assets/auth-page.svg";
-import type {V2_MetaFunction} from "@remix-run/node";
+import type {V2_MetaFunction, LinksFunction} from "@remix-run/node";
 import {useActionData} from "react-router";
 import {useToast} from "~/components/ui/use-toast";
-import type { LinksFunction } from "@remix-run/node";
 import inputStyles from "~/styles/auth/input.css"
 
 export const meta: V2_MetaFunction = () => {

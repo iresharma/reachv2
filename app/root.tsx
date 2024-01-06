@@ -15,7 +15,7 @@ import {useEffect} from "react";
 import {MainNav} from "~/components/misc/main-nav";
 import {UserNav} from "~/components/misc/user-nav";
 import {Input} from "~/components/ui/input";
-import {Toaster} from "~/components/ui/toaster";
+import {Toaster} from "~/components/ui/sonner";
 import {CommandPallet} from "~/components/misc/command-pallet";
 import {commitSession, getSession} from "~/session";
 import {json} from "@remix-run/node";
