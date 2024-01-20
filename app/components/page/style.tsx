@@ -1,16 +1,18 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "~/components/ui/card";
 import {Label} from "~/components/ui/label";
 import {Input} from "~/components/ui/input";
 import {Textarea} from "~/components/ui/textarea";
 import {Button} from "~/components/ui/button";
 import {Avatar, AvatarFallback, AvatarImage} from "~/components/ui/avatar";
-import {ImagePlusIcon} from "lucide-react";
+import {ImagePlusIcon, SaveIcon} from "lucide-react";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../ui/select";
 import {HoverCard, HoverCardContent, HoverCardTrigger} from "../ui/hover-card";
+import {useLoaderData} from "react-router";
+import type {Page, Meta} from "~/services/api/page/getPage";
 
-function HeaderEdit() {
-    const [imgUrl, setImgUrl] = useState("")
+function HeaderEdit({ headerData }: { headerData: { Name: string; Desc: string, PhotoUrl: string } }) {
+    const [imgUrl, setImgUrl] = useState(headerData.PhotoUrl)
     const uploadFile = () => {
         const link = document.createElement('input')
         link.setAttribute("type", "file")
@@ -32,7 +34,7 @@ function HeaderEdit() {
             <CardHeader>
                 <CardTitle>Header Section</CardTitle>
                 <CardDescription>
-                    What area are you having problems with?
+                    Info for the header section of the page
                 </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6" style={{gridTemplateColumns: "1fr 2fr"}}>
@@ -49,25 +51,23 @@ function HeaderEdit() {
                 <div className="space-y-4">
                     <div className="grid gap-2">
                         <Label htmlFor="subject">Profile Title</Label>
-                        <Input id="subject" placeholder="Profile title"/>
+                        <Input id="subject" placeholder="Profile title" value={headerData.Name}/>
                     </div>
                     <div className="grid gap-2">
                         <Label htmlFor="description">Bio</Label>
                         <Textarea
                             id="description"
                             placeholder="A small description for this page."
+                            value={headerData.Desc}
                         />
                     </div>
                 </div>
             </CardContent>
-            <CardFooter className="justify-end space-x-2">
-                <Button>Submit</Button>
-            </CardFooter>
         </Card>
     </>
 }
 
-function ButtonStyle() {
+function ButtonStyle({ button }: { button: string; }) {
     return <>
         <Card className="my-6">
             <CardHeader>
@@ -78,7 +78,7 @@ function ButtonStyle() {
             </CardHeader>
             <CardContent className="grid gap-4 h-64 overflow-y-scroll" style={{gridTemplateColumns: "1fr 1fr 1fr"}}>
                 {[...Array(92)].map((val, index) => <div key={index}
-                                                         className="bg-secondary p-4 rounded-2xl flex justify-center items-center h-20">
+                                                         className={"bg-secondary p-4 rounded-2xl flex justify-center items-center h-20" + (`button-${index}` === button && "ring ring-2 ring-primary" )}>
                     <button className={`button-${index}`}>Button type {index}</button>
                 </div>)}
             </CardContent>
@@ -86,10 +86,10 @@ function ButtonStyle() {
     </>
 }
 
-function Font() {
+function Font({ initialFont }: { initialFont: string; }) {
     const fonts = ["Pixelify Sans", "Abril Fatface", "Agbalumo", "Caveat", "Dancing Script", "Edu TAS Beginner", "Josefin Sans", "Oswald",
         "Playfair Display", "Roboto Condensed", "Roboto Slab", "Shadows Into Lightdisplayswap"];
-    const [font, setFont] = useState("Pixelify Sans");
+    const [font, setFont] = useState(initialFont === "" ? "Pixelify Sans" : initialFont);
     return <>
         <Card className="my-6">
             <CardHeader>
@@ -116,17 +116,24 @@ function Font() {
     </>
 }
 
-function Meta() {
-    const tags = {
-        "description": "A brief description of the content. ",
-        "robots": "",
-        "og:title": "The title of your page.",
-        "og:url": "The URL of the content.",
-        "og:image": "The URL of an image for the social snippet.",
-        "og:type": "The type of object you’re sharing. (e.g., article, website, etc.)",
-        "og:description": "A brief description of the content.",
-        "og:locale": "Defines the content language."
-    }
+function Meta({ metaTags }: { metaTags: Meta[] }) {
+    const [tags, setTags] = useState({});
+    useEffect(() => {
+        let tempTags = {
+            "description": ["A brief description of the content. ", ""],
+            "robots": ["", ""],
+            "og:title": ["The title of your page.", ""],
+            "og:url": ["The URL of the content.", ""],
+            "og:image": ["The URL of an image for the social snippet.", ""],
+            "og:type": ["The type of object you’re sharing. (e.g., article, website, etc.)", ""],
+            "og:description": ["A brief description of the content.", ""],
+            "og:locale": ["Defines the content language.", ""],
+        }
+        metaTags.forEach(meta => {
+            tempTags[meta.Type][1] = meta.Value
+        });
+        setTags(tempTags)
+    }, [])
     return <>
         <Card className="my-6">
             <CardHeader>
@@ -142,13 +149,13 @@ function Meta() {
                         <HoverCard>
                             <HoverCardTrigger className="hover:underline cursor-help capitalize">{val}</HoverCardTrigger>
                             <HoverCardContent>
-                                {tags[val]}
+                                {tags[val][0]}
                                 <br />
                                 {val.startsWith("og") && <a target="_blank" className="underline cursor-pointer" href="https://ahrefs.com/blog/open-graph-meta-tags/">Read more here.</a>}
                                 {val === "robots" && <a target="_blank" className="underline cursor-pointer" href="https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag">Read here.</a>}
                             </HoverCardContent>
                         </HoverCard>
-                        <Input type="text" placeholder="Value" />
+                        <Input type="text" placeholder="Value" value={tags[val][1]} />
                     </div>)}
                 </div>
             </CardContent>
@@ -157,10 +164,24 @@ function Meta() {
 }
 
 export default function Style() {
+    const { page } = useLoaderData() as { page: Page };
     return <>
-        <HeaderEdit/>
-        <ButtonStyle/>
-        <Font/>
-        <Meta />
+        <code>
+            <pre>
+                {JSON.stringify(page, null, 4)}
+            </pre>
+        </code>
+        <HeaderEdit headerData={{
+            Name: page.Template.Name,
+            Desc: page.Template.Desc,
+            PhotoUrl: page.Template.Image
+        }}/>
+        <ButtonStyle button={page.Template.Button}/>
+        <Font initialFont={page.Template.Font} />
+        <Meta metaTags={page.Template.MetaTags} />
+        <Button>
+            <SaveIcon className="h-4 w-4 mr-2" />
+            Save changes
+        </Button>
     </>
 }
