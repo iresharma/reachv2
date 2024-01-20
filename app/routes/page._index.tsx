@@ -9,6 +9,7 @@ import PageLink from "~/components/page/link";
 import Style from "~/components/page/style";
 import buttonStyles from "~/styles/page/buttons.css";
 import {useRevalidator} from "@remix-run/react";
+import Analytics from "~/components/page/analytics";
 
 export const links: LinksFunction = () => {
     return [
@@ -90,7 +91,9 @@ export default function PageView() {
                         <TabsContent value="styles">
                             <Style />
                         </TabsContent>
-                        <TabsContent value="analytics">Change your password here.</TabsContent>
+                        <TabsContent value="analytics">
+                            <Analytics />
+                        </TabsContent>
                     </Tabs>
                 </div>
             </div>

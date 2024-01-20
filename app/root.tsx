@@ -11,7 +11,7 @@ import {
     Scripts,
     ScrollRestoration, useRouteError,
 } from "@remix-run/react";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {MainNav} from "~/components/misc/main-nav";
 import {UserNav} from "~/components/misc/user-nav";
 import {Input} from "~/components/ui/input";
@@ -23,9 +23,11 @@ import {redirect, useLoaderData, useMatches} from "react-router";
 import {validateSession} from "~/services/api/auth/validateSession";
 import NotFound from "~/components/misc/404";
 import {Button} from "~/components/ui/button";
-import {SunIcon} from "lucide-react";
+import {BellDotIcon, PenToolIcon, SunIcon} from "lucide-react";
 import switchTheme from "~/services/utils/themeSwitcher";
 import * as process from "process";
+import {NotificationCard} from "~/components/misc/notificationBox";
+import {useClickOutside} from "@mantine/hooks";
 
 export const links: LinksFunction = () => [
     {rel: "stylesheet", href: styles},
@@ -95,6 +97,8 @@ export default function App() {
         const data = routes.at(-1).pathname
         return !data.includes("auth")
     }
+    const [notificationOpen, setNotificationOpen] = useState(false);
+    const ref = useClickOutside(() => setNotificationOpen(false));
     // @ts-ignore
     return (
         <html lang="en" className="dark" id="html">
@@ -110,11 +114,26 @@ export default function App() {
                 <div className="flex h-16 items-center px-4">
                     <MainNav className="mx-6"/>
                     <div className="ml-auto flex items-center space-x-4">
+                        <div className="rounded-full bg-green-900 bg-opacity-50 text-green-200 border-2 border-green-700 p-2 text-xs flex justify-center items-center">
+                            <span className="h-3 w-3 bg-green-800 rounded-full inline-block mr-2 ml-1"> </span>
+                            We are beta, tell us about it
+                            <Button variant="secondary" className="bg-white rounded-full w-16 h-6 ml-6" size="icon">
+                                <PenToolIcon className="h-4 w-4 text-black" />
+                            </Button>
+                        </div>
                         <Input
                             type="search"
                             placeholder="Search..."
                             className="md:w-[100px] lg:w-[300px]"
+                            disabled={true}
                         />
+                        <Button variant="outline" onClick={() => setNotificationOpen(!notificationOpen)}
+                                size="icon" className="relative">
+                            <BellDotIcon className="w-4 h-4"/>
+                            {notificationOpen && <div ref={ref} className="absolute inset-y-10 right-0">
+                                <NotificationCard className="text-start"/>
+                            </div>}
+                        </Button>
                         <Button variant="outline" onClick={() => switchTheme(localStorage.getItem("theme") ?? "dark")}
                                 size="icon">
                             <SunIcon className="w-4 h-4"/>
