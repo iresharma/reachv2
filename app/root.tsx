@@ -23,7 +23,7 @@ import {redirect, useLoaderData, useMatches} from "react-router";
 import {validateSession} from "~/services/api/auth/validateSession";
 import NotFound from "~/components/misc/404";
 import {Button} from "~/components/ui/button";
-import {BellDotIcon, PenToolIcon, SunIcon} from "lucide-react";
+import {BellDotIcon, PenToolIcon, Search, SunIcon} from "lucide-react";
 import switchTheme from "~/services/utils/themeSwitcher";
 import * as process from "process";
 import {NotificationCard} from "~/components/misc/notificationBox";
@@ -121,12 +121,10 @@ export default function App() {
                                 <PenToolIcon className="h-4 w-4 text-black" />
                             </Button>
                         </div>
-                        <Input
-                            type="search"
-                            placeholder="Search..."
-                            className="md:w-[100px] lg:w-[300px]"
-                            disabled={true}
-                        />
+                        <Button variant="outline" onClick={() => switchTheme(localStorage.getItem("theme") ?? "dark")}
+                                size="icon">
+                            <Search className="w-4 h-4"/>
+                        </Button>
                         <Button variant="outline" onClick={() => setNotificationOpen(!notificationOpen)}
                                 size="icon" className="relative">
                             <BellDotIcon className="w-4 h-4"/>
