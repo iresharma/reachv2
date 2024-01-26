@@ -69,14 +69,14 @@ export default function PageView() {
                 <div className="flex items-center space-x-2">
                     <Button>
                         <Globe2Icon className="w-4 h-4 mr-2"/>
-                        Visit
+                        {page.Route}
                     </Button>
                 </div>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr" }}>
                 <div className="p-10 py-6 relative flex justify-center">
                     {/* eslint-disable-next-line jsx-a11y/iframe-has-title */}
-                    <iframe src="https://reach-page-server.vercel.app/iresharma" className="rounded-xl border-4 h-[70vh] fixed"></iframe>
+                    <iframe src={`https://reach-page-server-production.up.railway.app/${page.Route}`} className="rounded-xl border-4 h-[70vh] fixed"></iframe>
                 </div>
                 <div className="p-4">
                     <Tabs defaultValue="links" className="w-[60vw]">

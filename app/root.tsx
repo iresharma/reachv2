@@ -128,10 +128,10 @@ export default function App() {
                         <Button variant="outline" onClick={() => setNotificationOpen(!notificationOpen)}
                                 size="icon" className="relative">
                             <BellDotIcon className="w-4 h-4"/>
-                            {notificationOpen && <div ref={ref} className="absolute inset-y-10 right-0">
-                                <NotificationCard className="text-start"/>
-                            </div>}
                         </Button>
+                        {notificationOpen && <div className="absolute inset-y-16 right-0" ref={ref} >
+                            <NotificationCard className="text-start"/>
+                        </div>}
                         <Button variant="outline" onClick={() => switchTheme(localStorage.getItem("theme") ?? "dark")}
                                 size="icon">
                             <SunIcon className="w-4 h-4"/>
