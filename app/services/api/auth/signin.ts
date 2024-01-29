@@ -14,7 +14,7 @@ export type SignInError = {
 };
 
 export type SignInResp = {
-    session: {[key: string]: any }
+    session: { [key: string]: any }
 }
 
 export type SignInInput = {
@@ -59,7 +59,7 @@ export const signIn = async ({
     session.set("X-Auth", data["auth"]);
     session.set("X-Perm", data["perm"]);
     if (signup) {
-        return { session }
+        return {session}
     }
     const {Id, Name, BoardId, BucketId, PageId} = await getUserAccount({auth: data["auth"], session: data["session"]});
     session.set("X-UserAccount", Id);
@@ -67,5 +67,5 @@ export const signIn = async ({
     session.set("X-Board", BoardId);
     session.set("X-Bucket", BucketId);
     session.set("X-Page", PageId);
-    return { session }
+    return {session}
 };

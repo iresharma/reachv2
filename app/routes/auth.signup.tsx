@@ -3,6 +3,7 @@ import {signup} from "~/services/api/auth/signup";
 import {redirect} from "react-router";
 import {signIn} from "~/services/api/auth/signin";
 import {commitSession} from "~/session";
+import {emailValidate} from "~/services/api/auth/emailValidate";
 
 
 export const action = async ({ request }: ActionArgs) => {
@@ -15,7 +16,8 @@ export const action = async ({ request }: ActionArgs) => {
         return redirect("/auth")
     }
     const respSignIn = await signIn({email: email.toString(), password: password.toString(), signup: true});
-    return redirect("/auth/userInfo", {
+    emailValidate(respSignIn.session.get("X-Auth"))
+    return redirect("/auth/verify", {
         headers: {
             "Set-Cookie": await commitSession(respSignIn.session)
         }

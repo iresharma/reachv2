@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} from "~/components/ui/card";
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from "~/components/ui/card";
 import {Label} from "~/components/ui/label";
 import {Input} from "~/components/ui/input";
 import {Textarea} from "~/components/ui/textarea";
@@ -10,6 +10,12 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "../
 import {HoverCard, HoverCardContent, HoverCardTrigger} from "../ui/hover-card";
 import {useLoaderData} from "react-router";
 import type {Page, Meta} from "~/services/api/page/getPage";
+import bg1 from "~/assets/pageBackground/bg1.png";
+import bg2 from "~/assets/pageBackground/bg2.png";
+import bg3 from "~/assets/pageBackground/bg3.png";
+import bg4 from "~/assets/pageBackground/bg4.png";
+import bg5 from "~/assets/pageBackground/bg5.png";
+import bg6 from "~/assets/pageBackground/bg6.png";
 
 function HeaderEdit({ headerData }: { headerData: { Name: string; Desc: string, PhotoUrl: string } }) {
     const [imgUrl, setImgUrl] = useState(headerData.PhotoUrl)
@@ -86,6 +92,32 @@ function ButtonStyle({ button }: { button: string; }) {
     </>
 }
 
+function BackgroundStyle() {
+    const back = (index: number) => {
+        switch (index) {
+            case 0: return bg1;
+            case 1: return bg2;
+            case 2: return bg3;
+            case 3: return bg4;
+            case 4: return bg5;
+            case 5: return bg6;
+        }
+    }
+    return <>
+        <Card className="my-6">
+            <CardHeader>
+                <CardTitle>Background Styles</CardTitle>
+                <CardDescription>
+                    Decide the look of your webpage
+                </CardDescription>
+            </CardHeader>
+            <CardContent className="grid gap-4 h-64 overflow-y-scroll" style={{gridTemplateColumns: "1fr 1fr 1fr"}}>
+                {[...Array(6)].map((val, index) => <div style={{ background: `url(${back(index)})`, backgroundSize: "contain" }} className={"bg-secondary p-4 rounded-2xl flex justify-center items-center h-20"}></div>)}
+            </CardContent>
+        </Card>
+    </>
+}
+
 function Font({ initialFont }: { initialFont: string; }) {
     const fonts = ["Pixelify Sans", "Abril Fatface", "Agbalumo", "Caveat", "Dancing Script", "Edu TAS Beginner", "Josefin Sans", "Oswald",
         "Playfair Display", "Roboto Condensed", "Roboto Slab", "Shadows Into Lightdisplayswap"];
@@ -130,6 +162,7 @@ function Meta({ metaTags }: { metaTags: Meta[] }) {
             "og:locale": ["Defines the content language.", ""],
         }
         metaTags.forEach(meta => {
+            // @ts-ignore
             tempTags[meta.Type][1] = meta.Value
         });
         setTags(tempTags)
@@ -166,17 +199,13 @@ function Meta({ metaTags }: { metaTags: Meta[] }) {
 export default function Style() {
     const { page } = useLoaderData() as { page: Page };
     return <>
-        <code>
-            <pre>
-                {JSON.stringify(page, null, 4)}
-            </pre>
-        </code>
         <HeaderEdit headerData={{
             Name: page.Template.Name,
             Desc: page.Template.Desc,
             PhotoUrl: page.Template.Image
         }}/>
         <ButtonStyle button={page.Template.Button}/>
+        <BackgroundStyle />
         <Font initialFont={page.Template.Font} />
         <Meta metaTags={page.Template.MetaTags} />
         <Button>

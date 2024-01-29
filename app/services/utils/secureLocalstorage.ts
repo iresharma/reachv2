@@ -1,24 +1,19 @@
-import Crypto from "crypto-es";
+import Cookie from "js-cookie"
 
 class SecureLocalstorage {
 
     SECRET_KEY = "cmVhY2gtc3lzdGVtcy1zZWN1cmUta2V5";
 
     setItem(key: string, value: string) {
-        const keyEncrypt = Crypto.AES.encrypt(key, this.SECRET_KEY).toString();
-        const valueEncrypt = Crypto.AES.encrypt(value, this.SECRET_KEY).toString();
-
-        // localStorage.setItem(keyEncrypt, valueEncrypt)
-        localStorage.setItem(key, value)
+        Cookie.set(key, value, {secure: true})
     }
 
     getItem(key: string): string {
-        // const keyEncrypt = Crypto.AES.encrypt(key, this.SECRET_KEY).toString();
-        // const encryptedValue = localStorage.getItem(keyEncrypt) ?? "";
-        // const value = Crypto.AES.decrypt(encryptedValue, this.SECRET_KEY).toString();
-        // return value;
+        return Cookie.get(key) ?? ""
+    }
 
-        return localStorage.getItem(key)
+    removeItem(key: string) {
+        Cookie.remove(key)
     }
 }
 
