@@ -2,16 +2,23 @@ import { cn } from "~/lib/utils";
 import {
   CalendarDays,
   ChromeIcon,
-  CloudCog,
+  CloudCog, Cog,
   ListChecksIcon,
   Mail,
   ShoppingBag,
 } from "lucide-react";
+import {useEffect, useState} from "react";
+import Cookies from "js-cookie";
 
 export function MainNav({
   className,
   ...props
 }: React.HTMLAttributes<HTMLElement>) {
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  useEffect(() => {
+    const perm = Cookies.get("X-Perm");
+    setIsAdmin(!!(perm?.split(";").includes("admin")))
+  }, [])
   return (
     <nav
       className={cn("flex items-center space-x-4 lg:space-x-6", className)}
@@ -61,19 +68,26 @@ export function MainNav({
         Mail
       </a>
       <a
-        href="/examples/dashboard"
+        href="/calendar"
         className="text-sm flex items-center font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         <CalendarDays className="w-4 h-4 mr-2" />
         Calendar
       </a>
       <a
-        href="/examples/dashboard"
+        href="/store"
         className="text-sm flex items-center font-medium text-muted-foreground transition-colors hover:text-primary"
       >
         <ShoppingBag className="w-4 h-4 mr-2" />
         Store
       </a>
+      {isAdmin && (<a
+          href="/store"
+          className="text-sm flex items-center font-medium text-muted-foreground transition-colors hover:text-primary"
+      >
+        <Cog className="w-4 h-4 mr-2"/>
+        Manage Account
+      </a>)}
     </nav>
   );
 }
