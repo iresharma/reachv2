@@ -1,58 +1,97 @@
-# Welcome to Remix!
+# Reach Frontend
 
-- [Remix Docs](https://remix.run/docs)
+Welcome to the GitHub repository for the frontend of our Remix-based SaaS platform! This platform is designed to help content-heavy teams collaborate on all aspects of their day-to-day work seamlessly and efficiently.
 
-## Development
+![Project Structure](app-structure.png)
 
-From your terminal:
+## Table of Contents
 
-```sh
-npm run dev
-```
+- [Features](#features)
+- [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installation](#installation)
+    - [Running the App](#running-the-app)
+- [Contributing](#contributing)
+- [License](#license)
 
-This starts your app in development mode, rebuilding assets on file changes.
+## Features
 
-## Deployment
+- **Real-time Collaboration:** Edit and manage content simultaneously with your team.
+- **Task Management:** Create, assign, and track tasks and deadlines.
+- **Content Management:** Organize and store all your content in one place.
+- **User Roles and Permissions:** Control access and capabilities of each team member.
+- **Integrated Communication:** Chat and discuss within the platform.
+- **Analytics Dashboard:** Track and analyze team performance and content metrics.
 
-First, build your app for production:
+## Getting Started
 
-```sh
-npm run build
-```
+### Prerequisites
 
-Then run the app in production mode:
+Ensure you have the following installed:
 
-```sh
-npm start
-```
+- [Bun](https://bun.sh/) (version 1.0 or above)
 
-Now you'll need to pick a host to deploy it to.
+### Installation
 
-### DIY
+1. **Clone the repository:**
 
-If you're familiar with deploying node applications, the built-in Remix app server is production-ready.
+   ```bash
+   git clone https://github.com/your-username/remix-saas-frontend.git
+   cd remix-saas-frontend
+   ```
 
-Make sure to deploy the output of `remix build`
+2. **Install dependencies:**
 
-- `build/`
-- `public/build/`
+   ```bash
+   bun install
+   ```
 
-### Using a Template
+### Running the App
 
-When you ran `npx create-remix@latest` there were a few choices for hosting. You can run that again to create a new project, then copy over relevant code/assets from your current app to the new project that's pre-configured for your target server.
+1. **Start the development server:**
 
-Most importantly, this means everything in the `app/` directory, but if you've further customized your current application outside of there it may also include:
+   ```bash
+   bun dev
+   ```
 
-- Any assets you've added/updated in `public/`
-- Any updated versions of root files such as `.eslintrc.js`, etc.
+2. **Open your browser and navigate to:**
 
-```sh
-cd ..
-# create a new project, and pick a pre-configured host
-npx create-remix@latest
-cd my-new-remix-app
-# remove the new project's app (not the old one!)
-rm -rf app
-# copy your app over
-cp -R ../my-old-remix-app/app app
-```
+   ```
+   http://localhost:3000
+   ```
+
+   The app should now be running, and you can start collaborating!
+
+## Contributing
+
+We welcome contributions to enhance this project! To contribute:
+
+1. **Fork the repository:**
+
+   Click the "Fork" button at the top of this page.
+
+2. **Create a new branch:**
+
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+3. **Commit your changes:**
+
+   ```bash
+   git commit -m 'Add some feature'
+   ```
+
+4. **Push to the branch:**
+
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+5. **Create a pull request:**
+
+   Open a pull request from your forked repository's branch to the main branch of this repository.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
