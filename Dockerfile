@@ -28,16 +28,13 @@ RUN npm run build
 # Finally, build the production image with minimal footprint
 FROM base
 
-ENV API_DOMAIN="https://reach-auth-proxy-production.up.railway.app"
-ENV PORT="8080"
-ENV NODE_ENV="production"
-
 WORKDIR /myapp
 
 COPY --from=build /myapp/node_modules /myapp/node_modules
 COPY --from=build /myapp/build /myapp/build
 COPY --from=build /myapp/public /myapp/public
 COPY --from=build /myapp/package.json /myapp/package.json
-COPY --from=build /myapp/start.sh /myapp/start.sh
 
-ENTRYPOINT [ "./start.sh" ]
+EXPOSE 3000
+
+ENTRYPOINT npm run start
