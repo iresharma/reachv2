@@ -8,15 +8,6 @@ export type Session = {
     perm: string;
 };
 
-export type SignInError = {
-    error: string;
-    type: "warning" | "error";
-};
-
-export type SignInResp = {
-    session: { [key: string]: any }
-}
-
 export type SignInInput = {
     email: string;
     password: string;
@@ -27,7 +18,7 @@ export const signIn = async ({
                                  email,
                                  password,
                                  signup,
-                             }: SignInInput): Promise<SignInError | SignInResp> => {
+                             }: SignInInput): Promise<any> => {
     var myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
@@ -46,13 +37,11 @@ export const signIn = async ({
     );
     const session = await getSession();
     if (resp.status !== 200) {
+        console.log("here")
         session.unset("X-Session");
         session.unset("X-Auth");
         session.unset("X-Perm");
-        return {
-            type: resp.status.toString()[0] === "4" ? "warning" : "error",
-            error: await resp.text(),
-        };
+        return resp;
     }
     const data = await resp.json();
     session.set("X-Session", data["session"]);

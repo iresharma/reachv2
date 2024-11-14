@@ -21,6 +21,5 @@ export const signup = async ({ email, password }: SignupInput) => {
         process.env.API_DOMAIN + `/user`,
         requestOptions,
     );
-    console.log(resp)
-    return resp.status
+    return resp
 }

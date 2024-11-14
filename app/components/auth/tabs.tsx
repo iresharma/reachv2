@@ -89,7 +89,7 @@ export function AuthTabs() {
                             <div className="space-y-1 relative">
                                 <Label htmlFor="name">Email</Label>
                                 <Input name="email" onChange={({target}) => setEmail(target.value)} onBlur={emailExistsCallback}
-                                       id="email" placeholder="example@reach.io" id="input-with-load"/>
+                                       placeholder="example@reach.io" id="input-with-load"/>
                                 <span id="verify-status">
                                     {
                                         emailVerify === "LOADING" && <Loader/>

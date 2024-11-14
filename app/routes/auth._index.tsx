@@ -1,9 +1,11 @@
 import { AuthTabs } from "~/components/auth/tabs";
 import Background from "~/assets/auth-page.svg";
-import type {V2_MetaFunction, LinksFunction} from "@remix-run/node";
-import {useActionData} from "react-router";
+import {V2_MetaFunction, LinksFunction, LoaderArgs, json} from "@remix-run/node";
+import {useActionData, useLoaderData} from "react-router";
 import {useToast} from "~/components/ui/use-toast";
 import inputStyles from "~/styles/auth/input.css"
+import {commitSession, getSession} from "~/session";
+import {useEffect} from "react";
 
 export const meta: V2_MetaFunction = () => {
     return [
@@ -21,12 +23,24 @@ export const links: LinksFunction = () => {
     ];
 }
 
+export const loader = async ({ request }: LoaderArgs) => {
+    const session = await getSession(request.headers.get("Cookie"));
+    const error = session.get("error");
+    return json({ error: error }, {
+        headers: {
+            "Set-Cookie": await commitSession(session)
+        }
+    });
+}
+
 export default function AuthenticationPage() {
-    const actionData = useActionData();
-    const {toast} = useToast();
-    if(actionData) {
-        toast(actionData)
-    }
+    const loaderData = useLoaderData();
+    const { toast } = useToast();
+    useEffect(() => {
+        if(loaderData.error) {
+            toast({description: loaderData.error ?? "BLah", variant: "destructive"})
+        }
+    }, [loaderData]);
     return (
         <>
             <div className="container relative hidden h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
