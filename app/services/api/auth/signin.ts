@@ -56,5 +56,5 @@ export const signIn = async ({
     session.set("X-Board", BoardId);
     session.set("X-Bucket", BucketId);
     session.set("X-Page", PageId);
-    return {session}
+    return {status: 200, session}
 };
